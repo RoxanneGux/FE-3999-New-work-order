@@ -1,0 +1,156 @@
+$field-max-width: 457px;
+$field-with-icon-max-width: 520px;
+$form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 100%;
+}
+
+.new-wo-page {
+  background: var(--system-surfaces-surfaces-background);
+  padding: 0 16px;
+
+  @media (min-width: 768px) {
+    padding: 0 24px;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 32px;
+  }
+}
+
+.new-wo-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.breadcrumbs-container {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 16px;
+  padding-bottom: 80px;
+  width: 100%;
+  max-width: $form-content-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-end;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    max-width: $field-max-width;
+  }
+}
+
+.field-subtitle {
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--system-text-text-secondary, #5b6670);
+}
+
+.field-with-button {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+
+  aw-form-field {
+    flex: 1;
+    max-width: $field-max-width;
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.field-with-icon {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+
+  aw-form-field {
+    flex: 1;
+    max-width: $field-max-width;
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.field-pair {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+
+  > * {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.section-divider-line {
+  border-bottom: 1px solid var(--component-divider-stroke, #cfd2d3);
+  padding-top: 32px;
+  margin-bottom: 16px;
+}
+
+::ng-deep .section-divider > * {
+  padding-top: 24px !important;
+  padding-bottom: 8px !important;
+}
+
+.messages-box {
+  border: 1px solid var(--component-fields-form-active-stroke, #7b868c);
+  border-radius: 4px;
+  padding: 8px 16px;
+  min-height: 160px;
+  max-height: 160px;
+  overflow-y: auto;
+  font-size: 16px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  font-family: 'Roboto', sans-serif;
+  color: var(--component-fields-form-enabled-text, #1d252c);
+}
+
+.readonly-field {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--component-fields-form-enabled-text, #1d252c);
+  padding: 8px 0;
+}
