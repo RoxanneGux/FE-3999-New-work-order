@@ -16,6 +16,7 @@ import {
   AwButtonIconOnlyDirective,
   AwIconComponent,
   AwTableComponent,
+  AwCheckboxComponent,
   BreadCrumb,
   SingleSelectOption,
   TableCellInput,
@@ -46,6 +47,7 @@ import { MockMapComponent } from '../../components/mock-map/mock-map.component';
     AwButtonIconOnlyDirective,
     AwIconComponent,
     AwTableComponent,
+    AwCheckboxComponent,
     TaskCommentsDrawerComponent,
     MockMapComponent
   ],
@@ -66,6 +68,12 @@ export class NewWorkOrderComponent {
   selectedJobType = signal<string>('');
 
   isPM = computed(() => this.selectedJobType() === 'PM');
+  isPartRebuild = computed(() => this.selectedJobType() === 'PART_REBUILD');
+  isRepair = computed(() => this.selectedJobType() === 'REPAIR');
+  showAssetField = computed(() => !this.isPartRebuild());
+  showMeters = computed(() => !this.isPartRebuild());
+  showWorkPosition = computed(() => !this.isPartRebuild());
+  showRepairReason = computed(() => !this.isPartRebuild());
 
   pageTitle = computed(() => {
     const woId = this.generatedWoId();
@@ -102,7 +110,13 @@ export class NewWorkOrderComponent {
     financialProjectCode: new FormControl('(TECH001) John Smith'),
     account: new FormControl(''),
     warrantyWork: new FormControl<SingleSelectOption | null>({ label: 'No', value: 'NO' }),
-    notes: new FormControl('')
+    notes: new FormControl(''),
+    // Part Rebuild fields
+    partId: new FormControl(''),
+    partSuffix: new FormControl<SingleSelectOption | null>(null),
+    restockLocation: new FormControl<SingleSelectOption | null>(null),
+    quantityRequired: new FormControl(''),
+    fabricationNoCore: new FormControl(false)
   });
 
   jobTypeOptions: SingleSelectOption[] = [
@@ -122,6 +136,21 @@ export class NewWorkOrderComponent {
     { label: 'No', value: 'NO' },
     { label: 'Yes', value: 'YES' },
     { label: 'Pending', value: 'PENDING' }
+  ];
+
+  partSuffixOptions: SingleSelectOption[] = [
+    { label: '1', value: '1' },
+    { label: '2', value: '2' },
+    { label: '3', value: '3' },
+    { label: '4', value: '4' },
+    { label: '5', value: '5' }
+  ];
+
+  restockLocationOptions: SingleSelectOption[] = [
+    { label: 'QA-FULL-01 - QA FULL SRV LOCATION', value: 'QA-FULL-01' },
+    { label: 'MAIN - Main Shop', value: 'MAIN' },
+    { label: 'NORTH - North Facility', value: 'NORTH' },
+    { label: 'SOUTH - South Yard', value: 'SOUTH' }
   ];
 
   messagesText = `Other Open Work Orders

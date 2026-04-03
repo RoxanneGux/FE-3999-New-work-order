@@ -7,7 +7,7 @@
     <aw-divider [inset]="false" [middleInset]="false" [title]="pageTitle()" [altColor]="false"></aw-divider>
 
     <div class="form-content">
-      <!-- Job Type and Asset Row -->
+      <!-- Row 1: Job Type + Asset/Part -->
       <div class="form-row">
         <div class="form-field">
           <aw-form-field-label>Job Type</aw-form-field-label>
@@ -16,18 +16,47 @@
             [singleSelectListItems]="jobTypeOptions" [enableListReset]="true">
           </aw-select-menu>
         </div>
-        <div class="form-field">
-          <aw-form-field-label>Asset</aw-form-field-label>
-          <div class="field-with-button">
-            <aw-form-field>
-              <input AwInput formControlName="asset" aria-label="Asset" />
-            </aw-form-field>
-            <button AwButton [buttonType]="'outlined'" (click)="onLookup('asset')">Lookup</button>
+        @if (showAssetField()) {
+          <div class="form-field">
+            <aw-form-field-label>Asset</aw-form-field-label>
+            <div class="field-with-button">
+              <aw-form-field>
+                <input AwInput formControlName="asset" aria-label="Asset" />
+              </aw-form-field>
+              <button AwButton [buttonType]="'outlined'" (click)="onLookup('asset')">Lookup</button>
+            </div>
           </div>
-        </div>
+        } @else {
+          <div class="form-field">
+            <aw-form-field-label>Part ID</aw-form-field-label>
+            <div class="field-with-icon">
+              <aw-form-field>
+                <input AwInput formControlName="partId" aria-label="Part ID" />
+              </aw-form-field>
+              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Part" (click)="onLookup('partId')">
+                <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+              </button>
+            </div>
+          </div>
+        }
       </div>
 
-      <!-- Title and Messages Row -->
+      <!-- Part Suffix (Part Rebuild only) -->
+      @if (isPartRebuild()) {
+        <div class="form-row">
+          <div class="form-field">
+            <aw-form-field-label>Title</aw-form-field-label>
+            <span class="field-subtitle">Maximum characters 2000 (0/2000)</span>
+            <aw-form-field>
+              <textarea AwInput formControlName="title" rows="6" maxlength="2000" aria-label="Title"></textarea>
+            </aw-form-field>
+          </div>
+          <div class="form-field"></div>
+        </div>
+      }
+
+      <!-- Title and Messages Row (Repair / PM only) -->
+      @if (!isPartRebuild()) {
       <div class="form-row">
         <div class="form-field">
           <aw-form-field-label>Title</aw-form-field-label>
@@ -41,116 +70,137 @@
           <div class="messages-box">{{ messagesText }}</div>
         </div>
       </div>
+      }
 
-      <!-- Meters Section -->
-      <div class="form-section">
-        <aw-divider class="section-divider" subTitle="Meters"></aw-divider>
-        <div class="form-row">
-          <div class="form-field">
-            <aw-form-field-label>Meter 1</aw-form-field-label>
-            <span class="field-subtitle">Units: miles</span>
-            <div class="field-pair">
-              <aw-form-field>
-                <input AwInput formControlName="meter1" aria-label="Meter 1" />
-              </aw-form-field>
-              <aw-select-menu formControlName="meter1Validation" placeholder="Choose validation" ariaLabel="Meter 1 validation"
-                [singleSelectListItems]="validationOptions" [enableListReset]="true">
-              </aw-select-menu>
+      <!-- Meters Section (hidden for Part Rebuild) -->
+      @if (showMeters()) {
+        <div class="form-section">
+          <aw-divider class="section-divider" subTitle="Meters"></aw-divider>
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Meter 1</aw-form-field-label>
+              <span class="field-subtitle">Units: miles</span>
+              <div class="field-pair">
+                <aw-form-field><input AwInput formControlName="meter1" aria-label="Meter 1" /></aw-form-field>
+                <aw-select-menu formControlName="meter1Validation" placeholder="Choose validation" ariaLabel="Meter 1 validation"
+                  [singleSelectListItems]="validationOptions" [enableListReset]="true"></aw-select-menu>
+              </div>
+            </div>
+            <div class="form-field">
+              <aw-form-field-label>Meter 2</aw-form-field-label>
+              <span class="field-subtitle">Units: miles</span>
+              <div class="field-pair">
+                <aw-form-field><input AwInput formControlName="meter2" aria-label="Meter 2" /></aw-form-field>
+                <aw-select-menu formControlName="meter2Validation" placeholder="Choose validation" ariaLabel="Meter 2 validation"
+                  [singleSelectListItems]="validationOptions" [enableListReset]="true"></aw-select-menu>
+              </div>
             </div>
           </div>
-          <div class="form-field">
-            <aw-form-field-label>Meter 2</aw-form-field-label>
-            <span class="field-subtitle">Units: miles</span>
-            <div class="field-pair">
-              <aw-form-field>
-                <input AwInput formControlName="meter2" aria-label="Meter 2" />
-              </aw-form-field>
-              <aw-select-menu formControlName="meter2Validation" placeholder="Choose validation" ariaLabel="Meter 2 validation"
-                [singleSelectListItems]="validationOptions" [enableListReset]="true">
-              </aw-select-menu>
+          @if (showRepairReason()) {
+            <div class="form-row">
+              <div class="form-field">
+                <aw-form-field-label>Repair Reason</aw-form-field-label>
+                <div class="field-with-icon">
+                  <aw-form-field><input AwInput formControlName="repairReason" aria-label="Repair Reason" /></aw-form-field>
+                  <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Reason" (click)="onLookup('repairReason')">
+                    <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="form-field">
+                <aw-form-field-label>Work Class</aw-form-field-label>
+                <div class="field-with-icon">
+                  <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class" /></aw-form-field>
+                  <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Work Class" (click)="onLookup('workClass')">
+                    <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          }
         </div>
+
+        <!-- Services and Inspections Due (PM only) -->
+        @if (isPM()) {
+          <div class="pm-services-section">
+            <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
+            <div class="table-responsive d-block">
+              <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
+            </div>
+          </div>
+        }
+
+        <!-- Work Position (hidden for Part Rebuild) -->
+        @if (showWorkPosition()) {
+          <aw-expansion-panel class="d-block" [title]="'Work Position'" [showExpander]="true" [expanded]="false">
+            <app-mock-map></app-mock-map>
+          </aw-expansion-panel>
+        }
+
+        <!-- Service Status and Repair Site -->
         <div class="form-row">
           <div class="form-field">
-            <aw-form-field-label>Repair Reason</aw-form-field-label>
+            <aw-form-field-label>Service Status</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field>
-                <input AwInput formControlName="repairReason" aria-label="Repair Reason" />
-              </aw-form-field>
-              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Reason" (click)="onLookup('repairReason')">
+              <aw-form-field><input AwInput formControlName="serviceStatus" aria-label="Service Status" /></aw-form-field>
+              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Service Status" (click)="onLookup('serviceStatus')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
           </div>
           <div class="form-field">
-            <aw-form-field-label>Work Class</aw-form-field-label>
+            <aw-form-field-label>Repair Site</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field>
-                <input AwInput formControlName="workClass" aria-label="Work Class" />
-              </aw-form-field>
-              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Work Class" (click)="onLookup('workClass')">
+              <aw-form-field><input AwInput formControlName="repairSite" aria-label="Repair Site" /></aw-form-field>
+              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Site" (click)="onLookup('repairSite')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Services and Inspections Due (PM only) -->
-      @if (isPM()) {
-        <div class="pm-services-section">
-          <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
-          <div class="table-responsive d-block">
-            <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
           </div>
         </div>
       }
 
-      <!-- Work Position -->
-      <aw-expansion-panel class="d-block" [title]="'Work Position'" [showExpander]="true" [expanded]="false">
-        <app-mock-map></app-mock-map>
-      </aw-expansion-panel>
-
-      <!-- Service Status and Repair Site -->
-      <div class="form-row">
-        <div class="form-field">
-          <aw-form-field-label>Service Status</aw-form-field-label>
-          <div class="field-with-icon">
-            <aw-form-field>
-              <input AwInput formControlName="serviceStatus" aria-label="Service Status" />
-            </aw-form-field>
-            <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Service Status" (click)="onLookup('serviceStatus')">
-              <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
-            </button>
+      <!-- Part Rebuild: Restock Location, Quantity, Fabrication, Work Class -->
+      @if (isPartRebuild()) {
+        <div class="form-section">
+          <aw-divider class="section-divider" subTitle="Work Details"></aw-divider>
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Restock Location</aw-form-field-label>
+              <aw-select-menu formControlName="restockLocation" placeholder="Select" ariaLabel="Restock Location"
+                [singleSelectListItems]="restockLocationOptions" [enableSearch]="true" [enableListReset]="true"></aw-select-menu>
+            </div>
+            <div class="form-field">
+              <aw-form-field-label>Quantity Required</aw-form-field-label>
+              <aw-form-field><input AwInput formControlName="quantityRequired" type="number" aria-label="Quantity Required" /></aw-form-field>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field d-flex justify-content-center">
+              <aw-checkbox formControlName="fabricationNoCore" [checkBoxLabel]="'Fabrication - No Core'" [ariaLabel]="'Fabrication No Core'"></aw-checkbox>
+            </div>
+            <div class="form-field">
+              <aw-form-field-label>Work Class</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Work Class" (click)="onLookup('workClass')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="form-field">
-          <aw-form-field-label>Repair Site</aw-form-field-label>
-          <div class="field-with-icon">
-            <aw-form-field>
-              <input AwInput formControlName="repairSite" aria-label="Repair Site" />
-            </aw-form-field>
-            <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Site" (click)="onLookup('repairSite')">
-              <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
-            </button>
-          </div>
-        </div>
-      </div>
+      }
 
-      <!-- Dates Section -->
+      <!-- Scheduling (shared) -->
       <div class="form-section">
         <aw-divider class="section-divider" subTitle="Scheduling"></aw-divider>
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Date Time In</aw-form-field-label>
             <div class="field-pair">
-              <aw-form-field>
-                <input AwInput formControlName="dateTimeInDate" aria-label="Date In" />
-              </aw-form-field>
-              <aw-form-field>
-                <input AwInput formControlName="dateTimeInTime" aria-label="Time In" />
-              </aw-form-field>
+              <aw-form-field><input AwInput formControlName="dateTimeInDate" aria-label="Date In" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="dateTimeInTime" aria-label="Time In" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Open date picker">
                 <aw-icon [iconName]="'today'" [iconColor]="''"></aw-icon>
               </button>
@@ -159,12 +209,8 @@
           <div class="form-field">
             <aw-form-field-label>Date Time Due</aw-form-field-label>
             <div class="field-pair">
-              <aw-form-field>
-                <input AwInput formControlName="dateTimeDueDate" aria-label="Date Due" />
-              </aw-form-field>
-              <aw-form-field>
-                <input AwInput formControlName="dateTimeDueTime" aria-label="Time Due" />
-              </aw-form-field>
+              <aw-form-field><input AwInput formControlName="dateTimeDueDate" aria-label="Date Due" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="dateTimeDueTime" aria-label="Time Due" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Open date picker">
                 <aw-icon [iconName]="'today'" [iconColor]="''"></aw-icon>
               </button>
@@ -175,9 +221,7 @@
           <div class="form-field">
             <aw-form-field-label>Vendor</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field>
-                <input AwInput formControlName="vendor" aria-label="Vendor" />
-              </aw-form-field>
+              <aw-form-field><input AwInput formControlName="vendor" aria-label="Vendor" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Vendor" (click)="onLookup('vendor')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
@@ -187,7 +231,7 @@
         </div>
       </div>
 
-      <!-- Contact Section -->
+      <!-- Contact (shared) -->
       <div class="form-section">
         <aw-divider class="section-divider" subTitle="Contact Information"></aw-divider>
         <div class="form-row">
@@ -198,9 +242,7 @@
           <div class="form-field">
             <aw-form-field-label>Contact Name</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field>
-                <input AwInput formControlName="contactName" aria-label="Contact Name" />
-              </aw-form-field>
+              <aw-form-field><input AwInput formControlName="contactName" aria-label="Contact Name" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Contact" (click)="onLookup('contactName')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
@@ -210,29 +252,23 @@
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Phone</aw-form-field-label>
-            <aw-form-field>
-              <input AwInput formControlName="phone" aria-label="Phone" />
-            </aw-form-field>
+            <aw-form-field><input AwInput formControlName="phone" aria-label="Phone" /></aw-form-field>
           </div>
           <div class="form-field">
             <aw-form-field-label>Email Address</aw-form-field-label>
-            <aw-form-field>
-              <input AwInput formControlName="emailAddress" aria-label="Email Address" />
-            </aw-form-field>
+            <aw-form-field><input AwInput formControlName="emailAddress" aria-label="Email Address" /></aw-form-field>
           </div>
         </div>
       </div>
 
-      <!-- Financial Section -->
+      <!-- Financial (shared) -->
       <div class="form-section">
         <aw-divider class="section-divider" subTitle="Financial"></aw-divider>
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Priority</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field>
-                <input AwInput formControlName="priority" placeholder="(Default Priority ID) Priority Description" aria-label="Priority" />
-              </aw-form-field>
+              <aw-form-field><input AwInput formControlName="priority" placeholder="(Default Priority ID) Priority Description" aria-label="Priority" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Priority" (click)="onLookup('priority')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
@@ -241,9 +277,7 @@
           <div class="form-field">
             <aw-form-field-label>Financial Project Code</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field>
-                <input AwInput formControlName="financialProjectCode" aria-label="Financial Project Code" />
-              </aw-form-field>
+              <aw-form-field><input AwInput formControlName="financialProjectCode" aria-label="Financial Project Code" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Financial Project Code" (click)="onLookup('financialProjectCode')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
@@ -254,9 +288,7 @@
           <div class="form-field">
             <aw-form-field-label>Account</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field>
-                <input AwInput formControlName="account" aria-label="Account" />
-              </aw-form-field>
+              <aw-form-field><input AwInput formControlName="account" aria-label="Account" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Account" (click)="onLookup('account')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
@@ -265,22 +297,19 @@
           <div class="form-field">
             <aw-form-field-label>Warranty Work</aw-form-field-label>
             <aw-select-menu formControlName="warrantyWork" placeholder="Select" ariaLabel="Warranty Work"
-              [singleSelectListItems]="warrantyWorkOptions" [enableListReset]="true">
-            </aw-select-menu>
+              [singleSelectListItems]="warrantyWorkOptions" [enableListReset]="true"></aw-select-menu>
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Notes</aw-form-field-label>
-            <aw-form-field>
-              <textarea AwInput formControlName="notes" rows="6" aria-label="Notes"></textarea>
-            </aw-form-field>
+            <aw-form-field><textarea AwInput formControlName="notes" rows="6" aria-label="Notes"></textarea></aw-form-field>
           </div>
           <div class="form-field"></div>
         </div>
       </div>
 
-      <!-- Existing Service Requests -->
+      <!-- Existing Service Requests (shared) -->
       <aw-expansion-panel class="d-block" [title]="'Existing Service Requests'" [showExpander]="true" [expanded]="true">
         <div class="table-responsive d-block p-3">
           <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData"></aw-table>
