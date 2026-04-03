@@ -24,6 +24,7 @@ import {
 import { TableTextSubtextComponent } from '../../components/table-text-subtext/table-text-subtext.component';
 import { TaskCommentCellComponent } from '../../components/task-comment-cell/task-comment-cell.component';
 import { TaskCommentsDrawerComponent } from '../../components/task-comments-drawer/task-comments-drawer.component';
+import { MockMapComponent } from '../../components/mock-map/mock-map.component';
 
 @Component({
   selector: 'app-new-work-order',
@@ -45,7 +46,8 @@ import { TaskCommentsDrawerComponent } from '../../components/task-comments-draw
     AwButtonIconOnlyDirective,
     AwIconComponent,
     AwTableComponent,
-    TaskCommentsDrawerComponent
+    TaskCommentsDrawerComponent,
+    MockMapComponent
   ],
   templateUrl: './new-work-order.component.html',
   styleUrl: './new-work-order.component.scss'

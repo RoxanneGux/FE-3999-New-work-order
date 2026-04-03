@@ -1,0 +1,99 @@
+<div class="map-container">
+  <!-- Layers Panel -->
+  <div class="layers-panel" [class.collapsed]="!layersPanelOpen">
+    <!-- Panel Tabs -->
+    <div class="panel-tabs">
+      <button class="panel-tab active" aria-label="List view">
+        <aw-icon [iconName]="'menu'" [iconColor]="''"></aw-icon>
+      </button>
+      <button class="panel-tab" aria-label="Layers">
+        <aw-icon [iconName]="'layers'" [iconColor]="''"></aw-icon>
+      </button>
+      <button class="panel-tab" aria-label="Search">
+        <aw-icon [iconName]="'manage_search'" [iconColor]="''"></aw-icon>
+      </button>
+    </div>
+
+    <!-- Layers Content -->
+    <div class="panel-content">
+      <h3 class="panel-title">Layers</h3>
+
+      <!-- Asset Layer -->
+      <div class="layer-group">
+        <div class="layer-header">
+          <aw-icon [iconName]="'expand_more'" [iconColor]="''"></aw-icon>
+          <aw-icon [iconName]="'visibility'" [iconColor]="''"></aw-icon>
+          <aw-icon [iconName]="'lock'" [iconColor]="''"></aw-icon>
+          <span class="layer-name">Asset</span>
+          <aw-icon class="layer-action" [iconName]="'open_in_full'" [iconColor]="''"></aw-icon>
+        </div>
+        <div class="layer-children">
+          <div class="layer-item">
+            <aw-icon [iconName]="'visibility'" [iconColor]="''"></aw-icon>
+            <aw-icon [iconName]="'lock'" [iconColor]="''"></aw-icon>
+            <span class="layer-name">RG-CAR-01</span>
+            <aw-icon class="layer-action" [iconName]="'open_in_full'" [iconColor]="''"></aw-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Requests Layer -->
+      <div class="layer-group">
+        <div class="layer-header">
+          <aw-icon [iconName]="'expand_more'" [iconColor]="''"></aw-icon>
+          <aw-icon [iconName]="'visibility'" [iconColor]="''"></aw-icon>
+          <aw-icon [iconName]="'lock'" [iconColor]="''"></aw-icon>
+          <span class="layer-name">Service Requests</span>
+          <aw-icon class="layer-action" [iconName]="'open_in_full'" [iconColor]="''"></aw-icon>
+        </div>
+        <div class="layer-children">
+          <div class="layer-item">
+            <aw-icon [iconName]="'visibility'" [iconColor]="''"></aw-icon>
+            <aw-icon [iconName]="'lock'" [iconColor]="''"></aw-icon>
+            <aw-icon [iconName]="'warning'" [iconColor]="'aw-warning-800'"></aw-icon>
+            <span class="layer-name">BREAKDOWN-2</span>
+            <aw-icon class="layer-action" [iconName]="'open_in_full'" [iconColor]="''"></aw-icon>
+          </div>
+          <div class="layer-item">
+            <aw-icon [iconName]="'visibility'" [iconColor]="''"></aw-icon>
+            <aw-icon [iconName]="'lock'" [iconColor]="''"></aw-icon>
+            <aw-icon [iconName]="'warning'" [iconColor]="'aw-warning-800'"></aw-icon>
+            <span class="layer-name">QA-03</span>
+            <aw-icon class="layer-action" [iconName]="'open_in_full'" [iconColor]="''"></aw-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Collapse Toggle -->
+  <button class="collapse-toggle" (click)="toggleLayersPanel()" [attr.aria-label]="layersPanelOpen ? 'Collapse layers' : 'Expand layers'">
+    <aw-icon [iconName]="layersPanelOpen ? 'chevron_left' : 'chevron_right'" [iconColor]="''"></aw-icon>
+  </button>
+
+  <!-- Map Area -->
+  <div class="map-area">
+    <!-- Map Controls -->
+    <div class="map-controls">
+      <button class="map-control-btn" aria-label="Zoom in">+</button>
+      <button class="map-control-btn" aria-label="Zoom out">−</button>
+      <button class="map-control-btn" aria-label="My location">
+        <aw-icon [iconName]="'my_location'" [iconColor]="''"></aw-icon>
+      </button>
+    </div>
+
+    <!-- Map Placeholder Image -->
+    <div class="map-placeholder">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/12/1565/1205" alt="Map tile" class="map-tile" />
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/12/1565/1206" alt="Map tile" class="map-tile" />
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/12/1566/1205" alt="Map tile" class="map-tile" />
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/12/1566/1206" alt="Map tile" class="map-tile" />
+    </div>
+
+    <!-- Attribution -->
+    <div class="map-attribution">
+      <span>Bing maps</span>
+      <span class="powered-by">Powered by Esri</span>
+    </div>
+  </div>
+</div>
