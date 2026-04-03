@@ -1,0 +1,3 @@
+{
+  "text": "Other Open Work Orders\n  Work Order Number        Type    Status   Scheduled         Reason  Service\n  UX-TEST-1-2024-30        PM      OPEN                       Q2      C\n  UX-TEST-1-2024-34        REPAIR  PENDING                    QA-1\nUnit is 337 days late for PM service QA-PM-A - due date 04/30/2025\nUnit is Overdue 10100 life MILES on meter 1 for service QA-PM-A\n  - life meter 1 due at 100\nUnit is 337 days late for PM service PMS1 - due date 04/30/2025\nUnit is Overdue 10100 life MILES on meter 1 for service PMS1\n  - life meter 1 due at 100"
+}

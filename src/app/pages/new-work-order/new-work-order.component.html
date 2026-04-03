@@ -12,7 +12,7 @@
         <div class="form-field">
           <aw-form-field-label>Job Type</aw-form-field-label>
           <span class="field-subtitle">Select a Job Type to get started</span>
-          <aw-select-menu formControlName="jobType" placeholder="Select Job Type" ariaLabel="Job Type"
+          <aw-select-menu formControlName="jobType" ariaLabel="Job Type"
             [singleSelectListItems]="jobTypeOptions" [enableListReset]="true">
           </aw-select-menu>
         </div>
@@ -20,7 +20,7 @@
           <aw-form-field-label>Asset</aw-form-field-label>
           <div class="field-with-button">
             <aw-form-field>
-              <input AwInput formControlName="asset" placeholder="(Selected ASSET ID) Description" aria-label="Asset" />
+              <input AwInput formControlName="asset" aria-label="Asset" />
             </aw-form-field>
             <button AwButton [buttonType]="'outlined'" (click)="onLookup('asset')">Lookup</button>
           </div>
@@ -273,7 +273,7 @@
       <!-- Existing Service Requests -->
       <aw-expansion-panel class="d-block" [title]="'Existing Service Requests'" [showExpander]="true" [expanded]="true">
         <div class="table-responsive d-block p-3">
-          <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData()"></aw-table>
+          <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData"></aw-table>
         </div>
       </aw-expansion-panel>
     </div>

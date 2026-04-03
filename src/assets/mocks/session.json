@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "TECHNICIAN": {
+      "UserId": "TECH001",
+      "EmployeeId": "EMP-1001",
+      "EmployeeName": "John Smith",
+      "DefaultLocation": "MAIN",
+      "DefaultPhone": "555-123-4567",
+      "DefaultEmail": "john.smith@company.com",
+      "DefaultContactName": "Jane Doe",
+      "DefaultPriorityId": "4",
+      "DefaultPriorityDescription": "Normal"
+    }
+  }
+}

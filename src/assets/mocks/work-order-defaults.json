@@ -1,0 +1,24 @@
+{
+  "jobTypes": [
+    { "label": "Repair", "value": "REPAIR" },
+    { "label": "PM", "value": "PM" },
+    { "label": "Part Rebuild", "value": "PART_REBUILD" }
+  ],
+  "validationOptions": [
+    { "label": "Warning", "value": "WARNING" },
+    { "label": "Error", "value": "ERROR" },
+    { "label": "None", "value": "NONE" }
+  ],
+  "warrantyWorkOptions": [
+    { "label": "No", "value": "NO" },
+    { "label": "Yes", "value": "YES" },
+    { "label": "Pending", "value": "PENDING" }
+  ],
+  "priorityOptions": [
+    { "label": "(1) Emergency", "value": "1" },
+    { "label": "(2) Urgent", "value": "2" },
+    { "label": "(3) High", "value": "3" },
+    { "label": "(4) Normal", "value": "4" },
+    { "label": "(5) Low", "value": "5" }
+  ]
+}

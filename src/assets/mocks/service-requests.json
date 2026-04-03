@@ -1,0 +1,28 @@
+{
+  "Items": [
+    {
+      "TaskId": "TSK-001",
+      "TaskDescription": "Replace brake pads",
+      "SymptomId": "SYM-BRK",
+      "SymptomDescription": "Squealing noise when braking",
+      "EnteredWhen": "03/15/2023",
+      "EnteredTime": "10:30 AM",
+      "EnteredByName": "John Smith",
+      "EnteredById": "TECH001",
+      "PriorityId": "3",
+      "PriorityDescription": "High"
+    },
+    {
+      "TaskId": "TSK-002",
+      "TaskDescription": "Oil change and filter",
+      "SymptomId": "SYM-MNT",
+      "SymptomDescription": "Scheduled maintenance",
+      "EnteredWhen": "03/18/2023",
+      "EnteredTime": "2:15 PM",
+      "EnteredByName": "Jane Doe",
+      "EnteredById": "TECH002",
+      "PriorityId": "4",
+      "PriorityDescription": "Normal"
+    }
+  ]
+}

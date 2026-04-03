@@ -1,0 +1,76 @@
+{
+  "Items": [
+    {
+      "AssetId": "R-12345",
+      "Description": "MOTOR POOL SEDAN LINEAR - TEST",
+      "LicenseNumber": "ABC-1234",
+      "VinSerial": "1HGBH41JXMN109186",
+      "LifecycleStatus": "Active",
+      "Location": "MAIN",
+      "Meter1Reading": 45230,
+      "Meter1Units": "miles",
+      "Meter2Reading": 0,
+      "Meter2Units": "miles"
+    },
+    {
+      "AssetId": "QA-FLEET-002",
+      "Description": "QA FLEET TRUCK 002",
+      "LicenseNumber": "XYZ-5678",
+      "VinSerial": "2FMDK3GC4ABA12345",
+      "LifecycleStatus": "Active",
+      "Location": "NORTH",
+      "Meter1Reading": 78100,
+      "Meter1Units": "miles",
+      "Meter2Reading": 1200,
+      "Meter2Units": "hours"
+    },
+    {
+      "AssetId": "K123-456",
+      "Description": "SERIES 50 DETROIT DIESEL GAS ENGINE",
+      "LicenseNumber": "DEF-9012",
+      "VinSerial": "3VWDX7AJ5BM123456",
+      "LifecycleStatus": "In Service",
+      "Location": "SHOP-A",
+      "Meter1Reading": 12500,
+      "Meter1Units": "hours",
+      "Meter2Reading": 0,
+      "Meter2Units": ""
+    },
+    {
+      "AssetId": "QA-C-001",
+      "Description": "CARGO VAN 2500",
+      "LicenseNumber": "GHI-3456",
+      "VinSerial": "1GCGG25K571234567",
+      "LifecycleStatus": "Active",
+      "Location": "MAIN",
+      "Meter1Reading": 92340,
+      "Meter1Units": "miles",
+      "Meter2Reading": 0,
+      "Meter2Units": ""
+    },
+    {
+      "AssetId": "FL-VAN-03",
+      "Description": "FLEET VAN 03",
+      "LicenseNumber": "JKL-7890",
+      "VinSerial": "5FNRL5H91AB123456",
+      "LifecycleStatus": "Active",
+      "Location": "SOUTH",
+      "Meter1Reading": 55000,
+      "Meter1Units": "miles",
+      "Meter2Reading": 800,
+      "Meter2Units": "hours"
+    },
+    {
+      "AssetId": "TX-TRUCK-07",
+      "Description": "PICKUP TRUCK F-150",
+      "LicenseNumber": "MNO-2345",
+      "VinSerial": "1FTFW1ET5DFA12345",
+      "LifecycleStatus": "Active",
+      "Location": "EAST",
+      "Meter1Reading": 34500,
+      "Meter1Units": "miles",
+      "Meter2Reading": 0,
+      "Meter2Units": ""
+    }
+  ]
+}
