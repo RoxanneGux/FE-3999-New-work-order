@@ -126,7 +126,6 @@ export class NewWorkOrderComponent {
   ];
 
   validationOptions: SingleSelectOption[] = [
-    { label: ' ', value: '' },
     { label: 'Update the ticket record', value: 'UPDATE_TICKET' },
     { label: 'Update transaction only', value: 'UPDATE_TRANSACTION' },
     { label: 'Update transaction only on fail', value: 'UPDATE_TRANSACTION_FAIL' }
