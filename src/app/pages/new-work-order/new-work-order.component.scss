@@ -110,9 +110,14 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   gap: 8px;
   align-items: flex-end;
 
-  > * {
+  > aw-form-field,
+  > aw-select-menu {
     flex: 1;
     min-width: 0;
+  }
+
+  > button {
+    flex-shrink: 0;
   }
 }
 
