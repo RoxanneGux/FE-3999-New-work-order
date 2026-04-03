@@ -79,7 +79,7 @@ export class NewWorkOrderComponent {
   ]);
 
   woForm = new FormGroup({
-    jobType: new FormControl<SingleSelectOption | null>(null),
+    jobType: new FormControl<SingleSelectOption | null>({ label: 'Repair', value: 'REPAIR' }),
     asset: new FormControl('(R-12345) MOTOR POOL SEDAN LINEAR - TEST'),
     title: new FormControl(''),
     meter1: new FormControl(''),
@@ -237,9 +237,13 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   }
 
   constructor() {
+    // Set initial state for default job type
+    const year = new Date().getFullYear();
+    this.generatedWoId.set(`${year}-${this._defaultLocation}-${this._woSequence}`);
+    this.selectedJobType.set('REPAIR');
+
     this.woForm.get('jobType')?.valueChanges.subscribe((value) => {
       if (value && typeof value === 'object' && value.value) {
-        const year = new Date().getFullYear();
         this.generatedWoId.set(`${year}-${this._defaultLocation}-${this._woSequence}`);
         this.selectedJobType.set(value.value);
       } else {
