@@ -151,7 +151,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     },
     {
       type: TableCellTypes.IconButton, key: 'searchAction', label: ' ', align: 'center',
-      buttonType: 'secondary', icon: 'search',
+      buttonType: 'primary', icon: 'search',
       action: (data?: any) => console.log('Search row:', data)
     }
   ];
