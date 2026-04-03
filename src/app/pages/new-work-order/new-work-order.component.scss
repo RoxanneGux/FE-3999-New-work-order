@@ -7,6 +7,7 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   flex-direction: column;
   flex-grow: 1;
   min-height: 100%;
+  overflow-x: clip;
 }
 
 .new-wo-page {
