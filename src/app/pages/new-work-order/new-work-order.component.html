@@ -97,6 +97,16 @@
         </div>
       </div>
 
+      <!-- Services and Inspections Due (PM only) -->
+      @if (isPM()) {
+        <div class="pm-services-section">
+          <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
+          <div class="table-responsive d-block">
+            <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
+          </div>
+        </div>
+      }
+
       <!-- Work Position -->
       <aw-expansion-panel class="d-block" [title]="'Work Position'" [showExpander]="true" [expanded]="false">
         <app-mock-map></app-mock-map>

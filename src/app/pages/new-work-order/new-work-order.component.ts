@@ -63,6 +63,9 @@ export class NewWorkOrderComponent {
   private readonly _defaultLocation = 'MAIN';
   private readonly _woSequence = Math.floor(Math.random() * 900) + 100;
   generatedWoId = signal('');
+  selectedJobType = signal<string>('');
+
+  isPM = computed(() => this.selectedJobType() === 'PM');
 
   pageTitle = computed(() => {
     const woId = this.generatedWoId();
@@ -199,6 +202,32 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' }
   ];
 
+  // Services and Inspections Due table (PM only)
+  servicesInspectionsColumns: TableCellInput[] = [
+    { type: TableCellTypes.Checkbox, key: 'addToWorkOrder', label: 'Add to Work Order' },
+    {
+      sort: true, align: 'left', type: TableCellTypes.Custom, key: 'serviceId', label: 'Service / Inspection due',
+      combineFields: ['serviceId', 'serviceDescription'],
+      combineTemplate: (values: any[]) => ({
+        component: TableTextSubtextComponent,
+        componentData: { text: values[0], subText: values[1] }
+      })
+    },
+    { sort: true, align: 'center', type: TableCellTypes.Title, key: 'reason', label: 'Reason' },
+    { sort: true, align: 'center', type: TableCellTypes.Title, key: 'dateDue', label: 'Date due' },
+    { sort: true, align: 'center', type: TableCellTypes.Title, key: 'daysUntilDue', label: 'Days Until Due' },
+    { sort: true, align: 'center', type: TableCellTypes.Title, key: 'daysLate', label: 'Days late' },
+    { sort: true, align: 'center', type: TableCellTypes.Title, key: 'meter1UntilDue', label: 'Meter 1 until due' },
+    { sort: true, align: 'center', type: TableCellTypes.Title, key: 'meter2UntilDue', label: 'Meter 2 until due' }
+  ];
+
+  servicesInspectionsData = signal<any[]>([
+    { addToWorkOrder: false, serviceId: 'PMS1', serviceDescription: 'PM SERVICE 1', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 },
+    { addToWorkOrder: false, serviceId: 'QA-PM-A', serviceDescription: 'QA PM SERVICE A', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 }
+  ]);
+
+  servicesInspectionsCount = computed(() => this.servicesInspectionsData().length);
+
   get actionLeft(): ActionBarLeft[] {
     return [{ textCallback: { title: 'Cancel', action: () => console.log('Cancel') } }];
   }
@@ -212,8 +241,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       if (value && typeof value === 'object' && value.value) {
         const year = new Date().getFullYear();
         this.generatedWoId.set(`${year}-${this._defaultLocation}-${this._woSequence}`);
+        this.selectedJobType.set(value.value);
       } else {
         this.generatedWoId.set('');
+        this.selectedJobType.set('');
       }
     });
   }

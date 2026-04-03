@@ -160,3 +160,12 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   color: var(--component-fields-form-enabled-text, #1d252c);
   padding: 8px 0;
 }
+
+.pm-services-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: $form-content-max-width;
+  overflow-x: auto;
+}
