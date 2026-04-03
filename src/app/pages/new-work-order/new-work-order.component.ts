@@ -1,4 +1,4 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -59,6 +59,16 @@ export class NewWorkOrderComponent {
   drawerTaskDescription = signal('');
   drawerComment = signal('');
 
+  // Auto-generated WO ID
+  private readonly _defaultLocation = 'MAIN';
+  private readonly _woSequence = Math.floor(Math.random() * 900) + 100;
+  generatedWoId = signal('');
+
+  pageTitle = computed(() => {
+    const woId = this.generatedWoId();
+    return woId ? `New Work Order - ${woId}` : 'New Work Order';
+  });
+
   breadcrumbs = signal<BreadCrumb[]>([
     { label: 'HomePage Title', route: '/' },
     { label: 'Link 1', route: '/' },
@@ -66,7 +76,7 @@ export class NewWorkOrderComponent {
   ]);
 
   woForm = new FormGroup({
-    jobType: new FormControl<SingleSelectOption | null>({ label: 'Repair', value: 'REPAIR' }),
+    jobType: new FormControl<SingleSelectOption | null>(null),
     asset: new FormControl('(R-12345) MOTOR POOL SEDAN LINEAR - TEST'),
     title: new FormControl(''),
     meter1: new FormControl(''),
@@ -195,6 +205,17 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
   get actionRight(): ActionBarRight[] {
     return [{ buttonCallback: { label: 'Save', buttonType: 'outlined', action: () => console.log('Save', this.woForm.value) } }];
+  }
+
+  constructor() {
+    this.woForm.get('jobType')?.valueChanges.subscribe((value) => {
+      if (value && typeof value === 'object' && value.value) {
+        const year = new Date().getFullYear();
+        this.generatedWoId.set(`${year}-${this._defaultLocation}-${this._woSequence}`);
+      } else {
+        this.generatedWoId.set('');
+      }
+    });
   }
 
   onLookup(field: string): void {

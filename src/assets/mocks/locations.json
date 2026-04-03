@@ -1,0 +1,10 @@
+{
+  "Items": [
+    { "LocationId": "MAIN", "Description": "Main Shop" },
+    { "LocationId": "NORTH", "Description": "North Facility" },
+    { "LocationId": "SOUTH", "Description": "South Yard" },
+    { "LocationId": "EAST", "Description": "East Campus" },
+    { "LocationId": "SHOP-A", "Description": "Shop A" }
+  ],
+  "defaultLocation": "MAIN"
+}
