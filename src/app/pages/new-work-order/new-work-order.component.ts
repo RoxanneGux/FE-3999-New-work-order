@@ -22,6 +22,8 @@ import {
   TableCellTypes
 } from '@assetworks-llc/aw-component-lib';
 import { TableTextSubtextComponent } from '../../components/table-text-subtext/table-text-subtext.component';
+import { TaskCommentCellComponent } from '../../components/task-comment-cell/task-comment-cell.component';
+import { TaskCommentsDrawerComponent } from '../../components/task-comments-drawer/task-comments-drawer.component';
 
 @Component({
   selector: 'app-new-work-order',
@@ -42,12 +44,19 @@ import { TableTextSubtextComponent } from '../../components/table-text-subtext/t
     AwButtonDirective,
     AwButtonIconOnlyDirective,
     AwIconComponent,
-    AwTableComponent
+    AwTableComponent,
+    TaskCommentsDrawerComponent
   ],
   templateUrl: './new-work-order.component.html',
   styleUrl: './new-work-order.component.scss'
 })
 export class NewWorkOrderComponent {
+  // Drawer state
+  showCommentDrawer = signal(false);
+  drawerTaskId = signal('');
+  drawerTaskDescription = signal('');
+  drawerComment = signal('');
+
   breadcrumbs = signal<BreadCrumb[]>([
     { label: 'HomePage Title', route: '/' },
     { label: 'Link 1', route: '/' },
@@ -118,6 +127,20 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       })
     },
     {
+      sort: false, align: 'center', type: TableCellTypes.Custom, key: 'commentCell', label: ' ',
+      combineFields: ['comment.hasComment', 'taskId', 'taskDescription', 'comment.text'],
+      combineTemplate: (values: any[]) => ({
+        component: TaskCommentCellComponent,
+        componentData: {
+          hasComment: values[0] === true,
+          taskId: values[1] || '',
+          taskDescription: values[2] || '',
+          comment: values[3] || '',
+          onOpenDrawer: (id: string, desc: string, comment: string) => this.openCommentDrawer(id, desc, comment)
+        }
+      })
+    },
+    {
       sort: true, align: 'left', type: TableCellTypes.Custom, key: 'symptomId', label: 'Symptom',
       combineFields: ['symptomId', 'symptomDescription'],
       combineTemplate: (values: any[]) => ({
@@ -157,10 +180,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   ];
 
   serviceRequestData = [
-    { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' },
-    { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal', searchAction: '' },
-    { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
-    { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' }
+    { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', comment: { hasComment: true, text: 'Front brake pads worn below minimum thickness. Recommend immediate replacement with OEM parts.' }, symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' },
+    { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', comment: { hasComment: false, text: '' }, symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal', searchAction: '' },
+    { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', comment: { hasComment: true, text: 'Transmission fluid dark and burnt. Possible internal wear. Monitor after flush for shifting issues.' }, symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
+    { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' }
   ];
 
   get actionLeft(): ActionBarLeft[] {
@@ -173,5 +196,16 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
   onLookup(field: string): void {
     console.log('Lookup:', field);
+  }
+
+  openCommentDrawer(taskId: string, taskDescription: string, comment: string): void {
+    this.drawerTaskId.set(taskId);
+    this.drawerTaskDescription.set(taskDescription);
+    this.drawerComment.set(comment);
+    this.showCommentDrawer.set(true);
+  }
+
+  closeCommentDrawer(): void {
+    this.showCommentDrawer.set(false);
   }
 }

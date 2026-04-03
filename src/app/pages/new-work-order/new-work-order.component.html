@@ -283,3 +283,12 @@
 <div class="aw-sticky-footer">
   <aw-action-bar [actionsLeft]="actionLeft" [actionsRight]="actionRight"></aw-action-bar>
 </div>
+
+@if (showCommentDrawer()) {
+  <app-task-comments-drawer
+    [taskId]="drawerTaskId()"
+    [taskDescription]="drawerTaskDescription()"
+    [comment]="drawerComment()"
+    (close)="closeCommentDrawer()">
+  </app-task-comments-drawer>
+}
