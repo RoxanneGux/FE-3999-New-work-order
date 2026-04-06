@@ -48,9 +48,10 @@
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Title</aw-form-field-label>
-            <span class="field-subtitle">Maximum characters 2000 (0/2000)</span>
+            <span class="field-subtitle">Maximum characters 2000 ({{ titleCharCount() }}/2000)</span>
             <aw-form-field>
-              <textarea AwInput formControlName="title" rows="6" maxlength="2000" aria-label="Title"></textarea>
+              <textarea AwInput formControlName="title" rows="6" maxlength="2000" aria-label="Title"
+                (input)="titleCharCount.set(woForm.get('title')?.value?.length || 0)"></textarea>
             </aw-form-field>
           </div>
           <div class="form-field"></div>
@@ -62,9 +63,10 @@
       <div class="form-row">
         <div class="form-field">
           <aw-form-field-label>Title</aw-form-field-label>
-          <span class="field-subtitle">Maximum characters 2000 (0/2000)</span>
+          <span class="field-subtitle">Maximum characters 2000 ({{ titleCharCount() }}/2000)</span>
           <aw-form-field>
-            <textarea AwInput formControlName="title" rows="6" maxlength="2000" aria-label="Title"></textarea>
+            <textarea AwInput formControlName="title" rows="6" maxlength="2000" aria-label="Title"
+              (input)="titleCharCount.set(woForm.get('title')?.value?.length || 0)"></textarea>
           </aw-form-field>
         </div>
         <div class="form-field">
@@ -411,7 +413,9 @@
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Notes</aw-form-field-label>
-            <aw-form-field><textarea AwInput formControlName="notes" rows="6" aria-label="Notes"></textarea></aw-form-field>
+            <span class="field-subtitle">Maximum characters 2000 ({{ notesCharCount() }}/2000)</span>
+            <aw-form-field><textarea AwInput formControlName="notes" rows="6" maxlength="2000" aria-label="Notes"
+              (input)="notesCharCount.set(woForm.get('notes')?.value?.length || 0)"></textarea></aw-form-field>
           </div>
           <div class="form-field"></div>
         </div>

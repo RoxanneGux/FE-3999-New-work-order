@@ -88,6 +88,9 @@ export class NewWorkOrderComponent {
   showWorkPosition = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
   showRepairReason = computed(() => !this.isPartRebuild());
 
+  titleCharCount = signal(0);
+  notesCharCount = signal(0);
+
   pageTitle = computed(() => {
     const woId = this.generatedWoId();
     return woId ? `New Work Order - ${woId}` : 'New Work Order';
