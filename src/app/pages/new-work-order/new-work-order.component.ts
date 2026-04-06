@@ -77,9 +77,9 @@ export class NewWorkOrderComponent {
   isPM = computed(() => this.selectedJobType() === 'PM');
   isPartRebuild = computed(() => this.selectedJobType() === 'PART_REBUILD');
   isRepair = computed(() => this.selectedJobType() === 'REPAIR');
-  isLinearAsset = computed(() => ['REPAIR_LINEAR', 'PM_LINEAR'].includes(this.selectedJobType()));
-  isRepairLinear = computed(() => this.selectedJobType() === 'REPAIR_LINEAR');
-  isPMLinear = computed(() => this.selectedJobType() === 'PM_LINEAR');
+  selectedAssetType = signal<'Fleet' | 'Linear'>('Fleet');
+  isLinearAsset = computed(() => this.selectedAssetType() === 'Linear' && !this.isPartRebuild());
+  isPMLinear = computed(() => this.isPM() && this.isLinearAsset());
   showAssetField = computed(() => !this.isPartRebuild());
   showMeters = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
   showWorkPosition = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
@@ -143,9 +143,7 @@ export class NewWorkOrderComponent {
   jobTypeOptions: SingleSelectOption[] = [
     { label: 'Repair', value: 'REPAIR' },
     { label: 'PM', value: 'PM' },
-    { label: 'Part Rebuild', value: 'PART_REBUILD' },
-    { label: 'Repair Linear Asset', value: 'REPAIR_LINEAR' },
-    { label: 'PM Linear Asset', value: 'PM_LINEAR' }
+    { label: 'Part Rebuild', value: 'PART_REBUILD' }
   ];
 
   validationOptions: SingleSelectOption[] = [
@@ -319,28 +317,6 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       if (value && typeof value === 'object' && value.value) {
         this.generatedWoId.set(`${year}-${this._defaultLocation}-${this._woSequence}`);
         this.selectedJobType.set(value.value);
-
-        // Load default linear asset data for linear job types
-        if (['REPAIR_LINEAR', 'PM_LINEAR'].includes(value.value)) {
-          const defaultAsset = {
-            markers: [
-              { MarkerId: 'ROAD07-01', OffsetFromSegmentStart: 0 },
-              { MarkerId: 'ROAD07-02', OffsetFromSegmentStart: 82.5 },
-              { MarkerId: 'ROAD07-03', OffsetFromSegmentStart: 165 },
-              { MarkerId: 'ROAD07-04', OffsetFromSegmentStart: 247.5 },
-              { MarkerId: 'ROAD07-05', OffsetFromSegmentStart: 330 }
-            ],
-            length: 330
-          };
-          this.linearAssetMarkers.set(defaultAsset.markers);
-          this.linearAssetLength.set(defaultAsset.length);
-          this.woForm.get('fromMarker')?.setValue(defaultAsset.markers[0].MarkerId, { emitEvent: false });
-          this.woForm.get('fromOffset')?.setValue('0.0000', { emitEvent: false });
-          this.woForm.get('toMarker')?.setValue(defaultAsset.markers[defaultAsset.markers.length - 1].MarkerId, { emitEvent: false });
-          this.woForm.get('toOffset')?.setValue('0.0000', { emitEvent: false });
-          this.woForm.get('fromOffsetSlider')?.setValue(0, { emitEvent: false });
-          this.woForm.get('toOffsetSlider')?.setValue(defaultAsset.length, { emitEvent: false });
-        }
       } else {
         this.generatedWoId.set('');
         this.selectedJobType.set('');
@@ -361,25 +337,54 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       if (result?.action === 'go' && result.selectedAsset) {
         const asset = result.selectedAsset;
         this.woForm.get('asset')?.setValue(`(${asset.AssetId}) ${asset.Description}`);
+        this.selectedAssetType.set(asset.Type as 'Fleet' | 'Linear');
 
-        // Auto-switch job type based on asset type
-        const currentType = this.selectedJobType();
         if (asset.Type === 'Linear') {
-          // Switch to linear variant, preserving PM vs Repair
-          const linearType = currentType === 'PM' || currentType === 'PM_LINEAR'
-            ? 'PM_LINEAR' : 'REPAIR_LINEAR';
-          const linearLabel = linearType === 'PM_LINEAR' ? 'PM Linear Asset' : 'Repair Linear Asset';
-          this.woForm.get('jobType')?.setValue({ label: linearLabel, value: linearType });
-        } else if (asset.Type === 'Fleet') {
-          // Switch back to standard variant if currently on linear
-          if (currentType === 'REPAIR_LINEAR') {
-            this.woForm.get('jobType')?.setValue({ label: 'Repair', value: 'REPAIR' });
-          } else if (currentType === 'PM_LINEAR') {
-            this.woForm.get('jobType')?.setValue({ label: 'PM', value: 'PM' });
-          }
+          this.loadLinearAssetData(asset.AssetId);
+        } else {
+          // Clear linear data when switching to fleet
+          this.linearAssetMarkers.set([]);
+          this.linearAssetLength.set(0);
         }
       }
     });
+  }
+
+  /** Load marker data for a linear asset by ID. */
+  private loadLinearAssetData(assetId: string): void {
+    const linearAssets: Record<string, { markers: Marker[]; length: number }> = {
+      'ROAD07': {
+        markers: [
+          { MarkerId: 'ROAD07-01', OffsetFromSegmentStart: 0 },
+          { MarkerId: 'ROAD07-02', OffsetFromSegmentStart: 82.5 },
+          { MarkerId: 'ROAD07-03', OffsetFromSegmentStart: 165 },
+          { MarkerId: 'ROAD07-04', OffsetFromSegmentStart: 247.5 },
+          { MarkerId: 'ROAD07-05', OffsetFromSegmentStart: 330 }
+        ],
+        length: 330
+      },
+      'UX-BRIDGE-LINEAR': {
+        markers: [
+          { MarkerId: 'BRG-01', OffsetFromSegmentStart: 0 },
+          { MarkerId: 'BRG-02', OffsetFromSegmentStart: 50 },
+          { MarkerId: 'BRG-03', OffsetFromSegmentStart: 100 },
+          { MarkerId: 'BRG-04', OffsetFromSegmentStart: 150 }
+        ],
+        length: 150
+      }
+    };
+
+    const data = linearAssets[assetId];
+    if (!data) return;
+
+    this.linearAssetMarkers.set(data.markers);
+    this.linearAssetLength.set(data.length);
+    this.woForm.get('fromMarker')?.setValue(data.markers[0].MarkerId, { emitEvent: false });
+    this.woForm.get('fromOffset')?.setValue('0.0000', { emitEvent: false });
+    this.woForm.get('toMarker')?.setValue(data.markers[data.markers.length - 1].MarkerId, { emitEvent: false });
+    this.woForm.get('toOffset')?.setValue('0.0000', { emitEvent: false });
+    this.woForm.get('fromOffsetSlider')?.setValue(0, { emitEvent: false });
+    this.woForm.get('toOffsetSlider')?.setValue(data.length, { emitEvent: false });
   }
 
   openCommentDrawer(taskId: string, taskDescription: string, comment: string): void {
