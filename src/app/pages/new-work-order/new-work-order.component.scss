@@ -143,7 +143,7 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
 .messages-box {
   border: 1px solid var(--component-fields-form-active-stroke, #7b868c);
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 8px 16px 16px 16px;
   min-height: 160px;
   max-height: 160px;
   overflow-y: auto;
@@ -152,6 +152,7 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   white-space: pre-wrap;
   font-family: 'Roboto', sans-serif;
   color: var(--component-fields-form-enabled-text, #1d252c);
+  background: var(--system-surfaces-surfaces-background);
 }
 
 .readonly-field {
@@ -168,4 +169,19 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   width: 100%;
   max-width: $form-content-max-width;
   overflow-x: auto;
+}
+
+// Empty state styling for aw-table (::ng-deep required to override CCL encapsulated styles)
+// See: new-work-order.component.scss — this targets the aw-table empty state elements
+::ng-deep .no-content {
+  background: var(--system-surfaces-surfaces-background) !important;
+  padding-bottom: 16px !important;
+}
+
+::ng-deep aw-table .mat-mdc-table {
+  background: var(--system-surfaces-surfaces-background) !important;
+}
+
+::ng-deep aw-table table {
+  background: var(--system-surfaces-surfaces-background) !important;
 }

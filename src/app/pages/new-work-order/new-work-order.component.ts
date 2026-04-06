@@ -88,6 +88,7 @@ export class NewWorkOrderComponent {
   showWorkPosition = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
   showRepairReason = computed(() => !this.isPartRebuild());
 
+  hasAsset = signal(true);
   titleCharCount = signal(0);
   notesCharCount = signal(0);
 
@@ -104,7 +105,7 @@ export class NewWorkOrderComponent {
 
   woForm = new FormGroup({
     jobType: new FormControl<SingleSelectOption | null>({ label: 'Repair', value: 'REPAIR' }),
-    asset: new FormControl('(R-12345) MOTOR POOL SEDAN LINEAR - TEST'),
+    asset: new FormControl('(R-12345) MOTOR POOL SEDAN'),
     title: new FormControl(''),
     meter1: new FormControl(''),
     meter1Validation: new FormControl<SingleSelectOption | null>(null),
@@ -272,12 +273,12 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     }
   ];
 
-  serviceRequestData = [
+  serviceRequestData = signal([
     { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', comment: { hasComment: true, text: 'Front brake pads worn below minimum thickness. Recommend immediate replacement with OEM parts.' }, symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' },
     { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', comment: { hasComment: false, text: '' }, symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal', searchAction: '' },
     { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', comment: { hasComment: true, text: 'Transmission fluid dark and burnt. Possible internal wear. Monitor after flush for shifting issues.' }, symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
     { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' }
-  ];
+  ]);
 
   // Services and Inspections Due table (PM only)
   servicesInspectionsColumns: TableCellInput[] = [
@@ -328,6 +329,18 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         this.selectedJobType.set('');
       }
     });
+
+    // Clear asset-dependent data when asset field is emptied
+    this.woForm.get('asset')?.valueChanges.subscribe((value) => {
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        this.hasAsset.set(false);
+        this.serviceRequestData.set([]);
+        this.servicesInspectionsData.set([]);
+        this.selectedAssetType.set('Fleet');
+        this.linearAssetMarkers.set([]);
+        this.linearAssetLength.set(0);
+      }
+    });
   }
 
   onLookup(field: string): void {
@@ -343,9 +356,11 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       if (result?.action === 'go' && result.selectedAsset) {
         const asset = result.selectedAsset;
         this.woForm.get('asset')?.setValue(`(${asset.AssetId}) ${asset.Description}`);
+        this.hasAsset.set(true);
         this.selectedAssetType.set(asset.Type as 'Fleet' | 'Linear');
         this.meter1Units.set(asset.Meter1Units || '');
         this.meter2Units.set(asset.Meter2Units || '');
+        this.loadAssetRelatedData(asset.AssetId);
 
         if (asset.Type === 'Linear') {
           this.loadLinearAssetData(asset.AssetId);
@@ -379,6 +394,16 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
           { MarkerId: 'BRG-04', OffsetFromSegmentStart: 150 }
         ],
         length: 150
+      },
+      'ROAD07-EMPTY': {
+        markers: [
+          { MarkerId: 'ROAD07-01', OffsetFromSegmentStart: 0 },
+          { MarkerId: 'ROAD07-02', OffsetFromSegmentStart: 82.5 },
+          { MarkerId: 'ROAD07-03', OffsetFromSegmentStart: 165 },
+          { MarkerId: 'ROAD07-04', OffsetFromSegmentStart: 247.5 },
+          { MarkerId: 'ROAD07-05', OffsetFromSegmentStart: 330 }
+        ],
+        length: 330
       }
     };
 
@@ -393,6 +418,29 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     this.woForm.get('toOffset')?.setValue('0.0000', { emitEvent: false });
     this.woForm.get('fromOffsetSlider')?.setValue(0, { emitEvent: false });
     this.woForm.get('toOffsetSlider')?.setValue(data.length, { emitEvent: false });
+  }
+
+  /** Load per-asset service requests and services/inspections data. */
+  private loadAssetRelatedData(assetId: string): void {
+    const defaultServiceRequests = [
+      { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', comment: { hasComment: true, text: 'Front brake pads worn below minimum thickness. Recommend immediate replacement with OEM parts.' }, symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' },
+      { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', comment: { hasComment: false, text: '' }, symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal', searchAction: '' },
+      { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', comment: { hasComment: true, text: 'Transmission fluid dark and burnt. Possible internal wear. Monitor after flush for shifting issues.' }, symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
+      { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' }
+    ];
+
+    const defaultServicesInspections = [
+      { addToWorkOrder: false, serviceId: 'PMS1', serviceDescription: 'PM SERVICE 1', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 },
+      { addToWorkOrder: false, serviceId: 'QA-PM-A', serviceDescription: 'QA PM SERVICE A', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 }
+    ];
+
+    // Assets with no service requests (empty table → shows overlap checkbox for linear)
+    const emptyServiceRequestAssets = ['QA-C-001', 'ROAD07-EMPTY'];
+    // Assets with no services/inspections due (empty PM table)
+    const emptyServicesInspectionsAssets = ['QA-FLEET-002', 'FL-VAN-03-CLEAN'];
+
+    this.serviceRequestData.set(emptyServiceRequestAssets.includes(assetId) ? [] : defaultServiceRequests);
+    this.servicesInspectionsData.set(emptyServicesInspectionsAssets.includes(assetId) ? [] : defaultServicesInspections);
   }
 
   openCommentDrawer(taskId: string, taskDescription: string, comment: string): void {

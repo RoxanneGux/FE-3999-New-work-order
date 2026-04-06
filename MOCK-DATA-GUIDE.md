@@ -63,7 +63,7 @@ When a job type is selected, the title changes to "New Work Order - YYYY-LOCATIO
 
 | Asset ID | Description | License | Location | Meter 1 | Meter 1 Units | Meter 2 | Meter 2 Units |
 |---|---|---|---|---|---|---|---|
-| R-12345 | MOTOR POOL SEDAN LINEAR - TEST | ABC-1234 | MAIN | 45,230 | miles | 0 | miles |
+| R-12345 | MOTOR POOL SEDAN | ABC-1234 | MAIN | 45,230 | miles | 0 | miles |
 | QA-FLEET-002 | QA FLEET TRUCK 002 | XYZ-5678 | NORTH | 78,100 | miles | 1,200 | hours |
 | K123-456 | SERIES 50 DETROIT DIESEL GAS ENGINE | DEF-9012 | SHOP-A | 12,500 | hours | 0 | — |
 | QA-C-001 | CARGO VAN 2500 | GHI-3456 | MAIN | 92,340 | miles | 0 | — |
@@ -141,26 +141,14 @@ Total Length: 150 | Segment: SEG-BRIDGE-01 | Location: NORTH
 
 ## Services and Inspections Due (PM Job Type only)
 
-Shown when Job Type = PM, below the Repair Reason / Work Class row.
+Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes per asset.
 
-### Asset R-12345 — 2 services due
-
-| Service ID | Description | Reason | Date Due | Days Until Due | Days Late | Meter 1 Until Due | Meter 2 Until Due |
-|---|---|---|---|---|---|---|---|
-| PMS1 | PM SERVICE 1 | DATE | 04/30/2025 | LATE | 337 | 10,100 | 0 |
-| QA-PM-A | QA PM SERVICE A | DATE | 04/30/2025 | LATE | 337 | 10,100 | 0 |
-
-### Asset QA-FLEET-002 — 0 services due (empty state)
-
-No services or inspections due. Table shows empty state message.
-
-### Asset K123-456 — 3 services due
-
-| Service ID | Description | Reason | Date Due | Days Until Due | Days Late | Meter 1 Until Due | Meter 2 Until Due |
-|---|---|---|---|---|---|---|---|
-| INS-01 | ANNUAL INSPECTION | DATE | 06/15/2025 | LATE | 292 | 500 | 0 |
-| PMS2 | PM SERVICE 2 | METER | 08/01/2025 | 245 | 0 | 200 | 0 |
-| OIL-CHG | OIL CHANGE SERVICE | METER | 09/15/2025 | 200 | 0 | 1,500 | 0 |
+| Asset | Services Due |
+|---|---|
+| R-12345 (default) | 2 services (PMS1, QA-PM-A) |
+| QA-FLEET-002 | 0 services (empty — just shows count) |
+| FL-VAN-03-CLEAN | 0 services (empty — just shows count) |
+| All other assets | 2 services (PMS1, QA-PM-A) |
 
 ---
 
@@ -191,7 +179,7 @@ No services or inspections due. Table shows empty state message.
 | Field | Default Value |
 |---|---|
 | Job Type | (none — placeholder "Choose validation" shown) |
-| Asset | (R-12345) MOTOR POOL SEDAN LINEAR - TEST |
+| Asset | (R-12345) MOTOR POOL SEDAN |
 | Title | (empty) |
 | Meter 1 / Meter 2 | (empty) |
 | Meter Validation | (none — placeholder "Choose validation" shown) |
@@ -218,17 +206,20 @@ No services or inspections due. Table shows empty state message.
 
 | I want to see... | How |
 |---|---|
-| Full form with all fields | Select any job type |
-| Form with no WO ID | Don't select a job type |
-| PM services/inspections table (with data) | Select Job Type = PM (default asset R-12345 has 2 services due) |
-| PM services/inspections empty state | Select Job Type = PM, change asset to QA-FLEET-002 |
+| Full Repair form | Select Job Type = Repair (default asset R-12345 shows both meters with miles) |
+| Full PM form with services table | Select Job Type = PM (default asset R-12345 shows 2 services/inspections due) |
+| PM services/inspections empty state | Select PM, then search and select QA-FLEET-002 (shows "Services and Inspections Due: 0" with no table) |
+| Part Rebuild form | Select Job Type = Part Rebuild (shows Part ID, Restock Location, Quantity, Fabrication, Work Class) |
+| Form with no WO ID | Clear the job type selection |
+| Empty form (no asset data) | Clear the asset field — messages, service requests, and services/inspections all clear |
 | Task comment drawer | Click the comment icon on BRK-001 or TRN-003 in the Existing Service Requests table |
 | Task without comment | OIL-002 and ENG-004 have no comment icon |
-| Work Position map | Expand the "Work Position" expansion panel |
-| Linear asset slider with markers | Select Repair or PM, then search and select ROAD07 or UX-BRIDGE-LINEAR from Asset Search |
-| PM Linear with services + PM Service | Select PM, then search and select a linear asset |
-| Linear asset overlap checkbox | Select Repair + linear asset (overlap checkbox shown when service requests table is empty) |
-| Meter 2 hidden | Search and select K123-456, QA-C-001, or TX-TRUCK-07 (no Meter 2 units) |
-| Meter 2 with hours | Search and select QA-FLEET-002 or FL-VAN-03 (Meter 2 = hours) |
-| Meter 1 with hours | Search and select K123-456 (Meter 1 = hours) |
+| Existing Service Requests empty + overlap checkbox | Search and select QA-C-001 (fleet) or ROAD07-EMPTY (linear) — table is empty |
+| Work Position map (fleet) | Select Repair or PM with a fleet asset, expand the "Work Position" panel |
+| Linear asset slider (ROAD07, 5 markers) | Select Repair or PM, click Asset search icon, select ROAD07 |
+| Linear asset slider (Bridge, 4 markers) | Select Repair or PM, click Asset search icon, select UX-BRIDGE-LINEAR |
+| PM Linear with services + PM Service | Select PM, then search and select ROAD07 or UX-BRIDGE-LINEAR |
+| Meter 2 hidden | Click Asset search icon, select K123-456, QA-C-001, or TX-TRUCK-07 (no Meter 2 units) |
+| Meter 2 with hours | Click Asset search icon, select QA-FLEET-002 or FL-VAN-03 (Meter 2 = hours) |
+| Meter 1 with hours | Click Asset search icon, select K123-456 (Meter 1 = hours) |
 | Dark mode | Click the sun/moon FAB button in the bottom-right corner |

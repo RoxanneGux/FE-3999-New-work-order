@@ -35,15 +35,17 @@ export interface AssetSearchDialogResult {
 })
 export class AssetSearchDialogComponent extends BaseDialogComponent {
 
-  /** All mock assets — fleet + linear combined. */
+  /** All mock assets — fleet + linear combined, sorted by Asset ID A→Z. */
   readonly tableData = computed(() => [
-    { AssetId: 'R-12345', Description: 'MOTOR POOL SEDAN LINEAR - TEST', Location: 'MAIN', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'miles' },
-    { AssetId: 'QA-FLEET-002', Description: 'QA FLEET TRUCK 002', Location: 'NORTH', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'hours' },
+    { AssetId: 'FL-VAN-03', Description: 'FLEET VAN 03', Location: 'SOUTH', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'hours' },
+    { AssetId: 'FL-VAN-03-CLEAN', Description: 'FLEET VAN 03 - NO PM DUE', Location: 'SOUTH', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: '' },
     { AssetId: 'K123-456', Description: 'SERIES 50 DETROIT DIESEL GAS ENGINE', Location: 'SHOP-A', Status: 'In Service', Type: 'Fleet', Meter1Units: 'hours', Meter2Units: '' },
     { AssetId: 'QA-C-001', Description: 'CARGO VAN 2500', Location: 'MAIN', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: '' },
-    { AssetId: 'FL-VAN-03', Description: 'FLEET VAN 03', Location: 'SOUTH', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'hours' },
-    { AssetId: 'TX-TRUCK-07', Description: 'PICKUP TRUCK F-150', Location: 'EAST', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: '' },
+    { AssetId: 'QA-FLEET-002', Description: 'QA FLEET TRUCK 002', Location: 'NORTH', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'hours' },
+    { AssetId: 'R-12345', Description: 'MOTOR POOL SEDAN', Location: 'MAIN', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'miles' },
     { AssetId: 'ROAD07', Description: 'HIGHWAY 07 - MAIN CORRIDOR', Location: 'MAIN', Status: 'Active', Type: 'Linear', Meter1Units: '', Meter2Units: '' },
+    { AssetId: 'ROAD07-EMPTY', Description: 'HIGHWAY 07 - NO SERVICE REQUESTS', Location: 'MAIN', Status: 'Active', Type: 'Linear', Meter1Units: '', Meter2Units: '' },
+    { AssetId: 'TX-TRUCK-07', Description: 'PICKUP TRUCK F-150', Location: 'EAST', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: '' },
     { AssetId: 'UX-BRIDGE-LINEAR', Description: 'UX TEST BRIDGE - LINEAR ASSET', Location: 'NORTH', Status: 'Active', Type: 'Linear', Meter1Units: '', Meter2Units: '' },
   ]);
 
