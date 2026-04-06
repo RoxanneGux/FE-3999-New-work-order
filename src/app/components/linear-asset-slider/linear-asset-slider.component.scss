@@ -5,6 +5,11 @@
   border-radius: 8px;
   padding: 16px 48px;
   gap: 8px;
+  overflow: hidden;
+
+  @media (max-width: 575px) {
+    padding: 16px 16px;
+  }
 }
 
 .field-row {
@@ -19,6 +24,15 @@
     flex-direction: column;
     width: 43%;
     gap: 4px;
+  }
+
+  @media (max-width: 575px) {
+    flex-direction: column;
+    gap: 16px;
+
+    .slider-field {
+      width: 100%;
+    }
   }
 }
 
@@ -35,6 +49,12 @@
 
   .number-display {
     color: var(--system-text-text-primary, #1d252c);
+  }
+
+  @media (max-width: 575px) {
+    flex-direction: column;
+    padding-left: 0;
+    gap: 8px;
   }
 }
 
@@ -62,18 +82,18 @@
 /* Dual-range slider track */
 .range-track {
   position: relative;
-  height: 6px;
-  border-radius: 3px;
-  margin: 13px 8px;
-  background: var(--system-line-divider-stroke-line-color, #cfd2d3);
+  height: 8px;
+  border-radius: 4px;
+  margin: 10px 8px;
+  background: var(--system-surfaces-surfaces-background);
 }
 
 .range-input {
   position: absolute;
-  top: -10px;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 26px;
+  height: 8px;
   margin: 0;
   padding: 0;
   background: none;
@@ -88,11 +108,12 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--system-status-status-info, #0072ce);
+    background: var(--component-action-bar-background-background, #0054a6);
     border: 2px solid #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     cursor: pointer;
     pointer-events: all;
+    margin-top: -6px;
   }
 
   /* Firefox thumb */
@@ -100,7 +121,7 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--system-status-status-info, #0072ce);
+    background: var(--component-action-bar-background-background, #0054a6);
     border: 2px solid #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     cursor: pointer;
@@ -110,13 +131,13 @@
   /* Webkit track (transparent — we use the parent background) */
   &::-webkit-slider-runnable-track {
     background: transparent;
-    height: 6px;
+    height: 8px;
   }
 
   /* Firefox track */
   &::-moz-range-track {
     background: transparent;
-    height: 6px;
+    height: 8px;
   }
 
   &:disabled {

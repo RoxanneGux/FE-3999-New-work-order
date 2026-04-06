@@ -243,6 +243,6 @@ export class LinearAssetSliderComponent {
     const toVal = fg.get('toOffsetSlider')?.value ?? length;
     const fromPct = (fromVal / length) * 100;
     const toPct = (toVal / length) * 100;
-    return `linear-gradient(to right, var(--system-line-divider-stroke-line-color) ${fromPct}%, var(--system-status-status-info) ${fromPct}%, var(--system-status-status-info) ${toPct}%, var(--system-line-divider-stroke-line-color) ${toPct}%)`;
+    return `linear-gradient(to right, var(--system-surfaces-surfaces-background) ${fromPct}%, var(--component-scrollbar-general-use-bar-fill) ${fromPct}%, var(--component-scrollbar-general-use-bar-fill) ${toPct}%, var(--system-surfaces-surfaces-background) ${toPct}%)`;
   }
 }
