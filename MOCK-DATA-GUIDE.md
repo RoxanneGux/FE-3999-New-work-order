@@ -214,7 +214,7 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | Empty form (no asset data) | Clear the asset field — messages, service requests, and services/inspections all clear |
 | Task comment drawer | Click the comment icon on BRK-001 or TRN-003 in the Existing Service Requests table |
 | Task without comment | OIL-002 and ENG-004 have no comment icon |
-| Existing Service Requests empty + overlap checkbox | Search and select QA-C-001 (fleet) or ROAD07-EMPTY (linear) — table is empty |
+| Existing Service Requests empty + retrieve overlapping | Select Repair + linear asset (e.g., ROAD07-EMPTY) — table is empty, click archive icon to load 3 overlapping SRs |
 | Work Position map (fleet) | Select Repair or PM with a fleet asset, expand the "Work Position" panel |
 | Linear asset slider (ROAD07, 5 markers) | Select Repair or PM, click Asset search icon, select ROAD07 |
 | Linear asset slider (Bridge, 4 markers) | Select Repair or PM, click Asset search icon, select UX-BRIDGE-LINEAR |

@@ -17,6 +17,8 @@ import {
   AwIconComponent,
   AwTableComponent,
   AwCheckboxComponent,
+  AwSearchComponent,
+  AwToolTipDirective,
   BreadCrumb,
   SingleSelectOption,
   TableCellInput,
@@ -52,6 +54,8 @@ import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../compo
     AwIconComponent,
     AwTableComponent,
     AwCheckboxComponent,
+    AwSearchComponent,
+    AwToolTipDirective,
     TaskCommentsDrawerComponent,
     MockMapComponent,
     LinearAssetSliderComponent
@@ -441,6 +445,24 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
     this.serviceRequestData.set(emptyServiceRequestAssets.includes(assetId) ? [] : defaultServiceRequests);
     this.servicesInspectionsData.set(emptyServicesInspectionsAssets.includes(assetId) ? [] : defaultServicesInspections);
+  }
+
+  /** Handle search input on the Existing Service Requests table. */
+  onServiceRequestSearch(query: string): void {
+    // In a real app this would filter via API — here we just log it
+    console.log('Service request search:', query);
+  }
+
+  /** Retrieve overlapping service requests for the current linear asset position. */
+  retrieveOverlappingServiceRequests(): void {
+    if (!this.hasAsset() || !this.isLinearAsset()) return;
+
+    // Mock overlapping SRs that would come from the API
+    this.serviceRequestData.set([
+      { selected: false, taskId: 'SR-LIN-001', taskDescription: 'Pothole repair - marker 2 to 3', comment: { hasComment: true, text: 'Large pothole near marker ROAD07-02. Reported by maintenance crew.' }, symptomId: 'SYM-RD', symptomDescription: 'Road surface damage', enteredDate: '02/10/2026', enteredTime: '8:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
+      { selected: false, taskId: 'SR-LIN-002', taskDescription: 'Guard rail replacement', comment: { hasComment: false, text: '' }, symptomId: 'SYM-GR', symptomDescription: 'Damaged guard rail', enteredDate: '02/15/2026', enteredTime: '10:00 AM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '3', priorityDescription: 'High', searchAction: '' },
+      { selected: false, taskId: 'SR-LIN-003', taskDescription: 'Line marking refresh', comment: { hasComment: false, text: '' }, symptomId: 'SYM-LM', symptomDescription: 'Faded lane markings', enteredDate: '03/01/2026', enteredTime: '2:15 PM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '4', priorityDescription: 'Normal', searchAction: '' }
+    ]);
   }
 
   openCommentDrawer(taskId: string, taskDescription: string, comment: string): void {

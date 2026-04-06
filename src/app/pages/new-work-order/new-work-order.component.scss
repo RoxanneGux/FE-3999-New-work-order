@@ -185,3 +185,20 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
 ::ng-deep aw-table table {
   background: var(--system-surfaces-surfaces-background) !important;
 }
+
+// Existing Service Requests — search row and table container
+// (Bootstrap utilities don't apply inside aw-expansion-panel projected content)
+.sr-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 16px 12px 16px;
+}
+
+.sr-search-input {
+  flex-grow: 1;
+}
+
+.sr-table-container {
+  padding-bottom: 16px;
+}

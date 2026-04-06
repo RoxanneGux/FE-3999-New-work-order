@@ -429,16 +429,25 @@
            NOTE: Empty state background override via ::ng-deep in new-work-order.component.scss -->
       @if (!isPartRebuild()) {
       <aw-expansion-panel class="d-block" [title]="'Existing Service Requests'" [showExpander]="true" [expanded]="true">
-        <div class="table-responsive d-block p-3">
+        <!-- Search bar + archive button -->
+        <div class="sr-search-row">
+          <aw-search class="sr-search-input"
+            [searchOptions]="[]"
+            [placeholder]="'Search'"
+            [disable]="!hasAsset()"
+            [ariaLabel]="'Search existing service requests'">
+          </aw-search>
           @if (serviceRequestData().length === 0 && isLinearAsset()) {
-            <div class="mt-2 mb-3">
-              <aw-checkbox formControlName="overlapServiceRequests"
-                [checkBoxLabel]="'Retrieve service requests/defects that overlap with the work order position'"
-                [ariaLabel]="'Retrieve overlapping service requests'"
-                [disabled]="!hasAsset()">
-              </aw-checkbox>
-            </div>
+              <button AwButtonIconOnly AwToolTip type="button"
+                [buttonType]="'primary'" [disabled]="!hasAsset()"
+                ariaLabel="Retrieve overlapping service requests"
+                [tooltipMessage]="'Retrieve service requests/defects that overlap with the work order position'"
+                (click)="retrieveOverlappingServiceRequests()">
+                <aw-icon [iconName]="'archive'" [iconColor]="''"></aw-icon>
+              </button>
           }
+        </div>
+        <div class="sr-table-container">
           <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData()"
             [tableOptions]="{ noDataPlaceholder: 'There are no existing service requests.' }"></aw-table>
         </div>
