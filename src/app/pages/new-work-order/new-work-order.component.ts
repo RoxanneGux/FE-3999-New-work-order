@@ -78,6 +78,9 @@ export class NewWorkOrderComponent {
   isPartRebuild = computed(() => this.selectedJobType() === 'PART_REBUILD');
   isRepair = computed(() => this.selectedJobType() === 'REPAIR');
   selectedAssetType = signal<'Fleet' | 'Linear'>('Fleet');
+  meter1Units = signal<string>('miles');
+  meter2Units = signal<string>('miles');
+  hasMeter2 = computed(() => !!this.meter2Units());
   isLinearAsset = computed(() => this.selectedAssetType() === 'Linear' && !this.isPartRebuild());
   isPMLinear = computed(() => this.isPM() && this.isLinearAsset());
   showAssetField = computed(() => !this.isPartRebuild());
@@ -338,6 +341,8 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         const asset = result.selectedAsset;
         this.woForm.get('asset')?.setValue(`(${asset.AssetId}) ${asset.Description}`);
         this.selectedAssetType.set(asset.Type as 'Fleet' | 'Linear');
+        this.meter1Units.set(asset.Meter1Units || '');
+        this.meter2Units.set(asset.Meter2Units || '');
 
         if (asset.Type === 'Linear') {
           this.loadLinearAssetData(asset.AssetId);

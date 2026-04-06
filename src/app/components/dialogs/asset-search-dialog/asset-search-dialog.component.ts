@@ -16,6 +16,8 @@ export interface MockAssetRow {
   Location: string;
   Status: string;
   Type: string;
+  Meter1Units: string;
+  Meter2Units: string;
 }
 
 /** Result emitted when the dialog closes. */
@@ -35,14 +37,14 @@ export class AssetSearchDialogComponent extends BaseDialogComponent {
 
   /** All mock assets — fleet + linear combined. */
   readonly tableData = computed(() => [
-    { AssetId: 'R-12345', Description: 'MOTOR POOL SEDAN LINEAR - TEST', Location: 'MAIN', Status: 'Active', Type: 'Fleet' },
-    { AssetId: 'QA-FLEET-002', Description: 'QA FLEET TRUCK 002', Location: 'NORTH', Status: 'Active', Type: 'Fleet' },
-    { AssetId: 'K123-456', Description: 'SERIES 50 DETROIT DIESEL GAS ENGINE', Location: 'SHOP-A', Status: 'In Service', Type: 'Fleet' },
-    { AssetId: 'QA-C-001', Description: 'CARGO VAN 2500', Location: 'MAIN', Status: 'Active', Type: 'Fleet' },
-    { AssetId: 'FL-VAN-03', Description: 'FLEET VAN 03', Location: 'SOUTH', Status: 'Active', Type: 'Fleet' },
-    { AssetId: 'TX-TRUCK-07', Description: 'PICKUP TRUCK F-150', Location: 'EAST', Status: 'Active', Type: 'Fleet' },
-    { AssetId: 'ROAD07', Description: 'HIGHWAY 07 - MAIN CORRIDOR', Location: 'MAIN', Status: 'Active', Type: 'Linear' },
-    { AssetId: 'UX-BRIDGE-LINEAR', Description: 'UX TEST BRIDGE - LINEAR ASSET', Location: 'NORTH', Status: 'Active', Type: 'Linear' },
+    { AssetId: 'R-12345', Description: 'MOTOR POOL SEDAN LINEAR - TEST', Location: 'MAIN', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'miles' },
+    { AssetId: 'QA-FLEET-002', Description: 'QA FLEET TRUCK 002', Location: 'NORTH', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'hours' },
+    { AssetId: 'K123-456', Description: 'SERIES 50 DETROIT DIESEL GAS ENGINE', Location: 'SHOP-A', Status: 'In Service', Type: 'Fleet', Meter1Units: 'hours', Meter2Units: '' },
+    { AssetId: 'QA-C-001', Description: 'CARGO VAN 2500', Location: 'MAIN', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: '' },
+    { AssetId: 'FL-VAN-03', Description: 'FLEET VAN 03', Location: 'SOUTH', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: 'hours' },
+    { AssetId: 'TX-TRUCK-07', Description: 'PICKUP TRUCK F-150', Location: 'EAST', Status: 'Active', Type: 'Fleet', Meter1Units: 'miles', Meter2Units: '' },
+    { AssetId: 'ROAD07', Description: 'HIGHWAY 07 - MAIN CORRIDOR', Location: 'MAIN', Status: 'Active', Type: 'Linear', Meter1Units: '', Meter2Units: '' },
+    { AssetId: 'UX-BRIDGE-LINEAR', Description: 'UX TEST BRIDGE - LINEAR ASSET', Location: 'NORTH', Status: 'Active', Type: 'Linear', Meter1Units: '', Meter2Units: '' },
   ]);
 
   readonly columnsDefinition: TableCellInput[] = [

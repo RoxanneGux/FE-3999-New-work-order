@@ -104,22 +104,24 @@
           <div class="form-row">
             <div class="form-field">
               <aw-form-field-label>Meter 1</aw-form-field-label>
-              <span class="field-subtitle">Units: miles</span>
+              <span class="field-subtitle">Units: {{ meter1Units() }}</span>
               <div class="field-pair">
                 <aw-form-field><input AwInput formControlName="meter1" aria-label="Meter 1" /></aw-form-field>
                 <aw-select-menu formControlName="meter1Validation" placeholder="Choose validation" ariaLabel="Meter 1 validation"
                   [singleSelectListItems]="validationOptions" [enableListReset]="true"></aw-select-menu>
               </div>
             </div>
-            <div class="form-field">
-              <aw-form-field-label>Meter 2</aw-form-field-label>
-              <span class="field-subtitle">Units: miles</span>
-              <div class="field-pair">
-                <aw-form-field><input AwInput formControlName="meter2" aria-label="Meter 2" /></aw-form-field>
-                <aw-select-menu formControlName="meter2Validation" placeholder="Choose validation" ariaLabel="Meter 2 validation"
-                  [singleSelectListItems]="validationOptions" [enableListReset]="true"></aw-select-menu>
+            @if (hasMeter2()) {
+              <div class="form-field">
+                <aw-form-field-label>Meter 2</aw-form-field-label>
+                <span class="field-subtitle">Units: {{ meter2Units() }}</span>
+                <div class="field-pair">
+                  <aw-form-field><input AwInput formControlName="meter2" aria-label="Meter 2" /></aw-form-field>
+                  <aw-select-menu formControlName="meter2Validation" placeholder="Choose validation" ariaLabel="Meter 2 validation"
+                    [singleSelectListItems]="validationOptions" [enableListReset]="true"></aw-select-menu>
+                </div>
               </div>
-            </div>
+            }
           </div>
           @if (showRepairReason()) {
             <div class="form-row">

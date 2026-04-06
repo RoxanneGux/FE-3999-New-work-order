@@ -48,11 +48,11 @@ All mock data lives in `src/assets/mocks/`:
 
 | Job Type | Value | Form Behavior |
 |---|---|---|
-| Repair | REPAIR | Default form — all fields shown |
-| PM | PM | Shows "Services and Inspections Due" table below Repair Reason / Work Class |
-| Part Rebuild | PART_REBUILD | (TBD — form field adjustments pending) |
-| Repair Linear Asset | REPAIR_LINEAR | Shows Location, Equipment ID, Work Position with linear asset slider (markers/offsets), Work Details (Repair Reason, Work Class, Service Status), Existing Service Requests with overlap checkbox |
-| PM Linear Asset | PM_LINEAR | Same as Repair Linear Asset plus Services and Inspections Due table and PM Service field |
+| Repair | REPAIR | Default form — all fields shown. If a linear asset is selected, switches to linear layout (slider, markers, no meters) |
+| PM | PM | Shows "Services and Inspections Due" table. If a linear asset is selected, also shows PM Service field and linear layout |
+| Part Rebuild | PART_REBUILD | Part-specific fields (Part ID, Restock Location, Quantity, Fabrication). Never shows linear layout |
+
+The form auto-detects linear vs fleet assets from the Asset Search dialog. No explicit "Repair Linear Asset" or "PM Linear Asset" job type options exist — the form is smart enough to switch layout based on the selected asset's type.
 
 When no job type is selected, the page title reads "New Work Order".
 When a job type is selected, the title changes to "New Work Order - YYYY-LOCATION-###" (auto-generated).
@@ -88,7 +88,7 @@ Default location: **MAIN**
 
 ## Linear Assets (2 assets)
 
-Used when Job Type = Repair Linear Asset or PM Linear Asset. Default asset is ROAD07.
+Available in the Asset Search dialog (click the search icon on the Asset field). Selecting a linear asset auto-switches the form to the linear layout.
 
 ### ROAD07 — HIGHWAY 07 - MAIN CORRIDOR
 
@@ -225,6 +225,10 @@ No services or inspections due. Table shows empty state message.
 | Task comment drawer | Click the comment icon on BRK-001 or TRN-003 in the Existing Service Requests table |
 | Task without comment | OIL-002 and ENG-004 have no comment icon |
 | Work Position map | Expand the "Work Position" expansion panel |
-| Linear asset slider with markers | Select Job Type = Repair Linear Asset or PM Linear Asset (loads ROAD07 with 5 markers) |
-| PM Linear with services table | Select Job Type = PM Linear Asset (shows Services and Inspections Due table) |
-| Linear asset overlap checkbox | Select Job Type = Repair Linear Asset (overlap checkbox shown when service requests table is empty) |
+| Linear asset slider with markers | Select Repair or PM, then search and select ROAD07 or UX-BRIDGE-LINEAR from Asset Search |
+| PM Linear with services + PM Service | Select PM, then search and select a linear asset |
+| Linear asset overlap checkbox | Select Repair + linear asset (overlap checkbox shown when service requests table is empty) |
+| Meter 2 hidden | Search and select K123-456, QA-C-001, or TX-TRUCK-07 (no Meter 2 units) |
+| Meter 2 with hours | Search and select QA-FLEET-002 or FL-VAN-03 (Meter 2 = hours) |
+| Meter 1 with hours | Search and select K123-456 (Meter 1 = hours) |
+| Dark mode | Click the sun/moon FAB button in the bottom-right corner |
