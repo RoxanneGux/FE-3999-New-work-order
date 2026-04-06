@@ -1,0 +1,31 @@
+{
+  "Items": [
+    {
+      "AssetId": "ROAD07",
+      "Description": "HIGHWAY 07 - MAIN CORRIDOR",
+      "SegmentId": "SEG-ROAD07-01",
+      "Location": "MAIN",
+      "TotalLength": 330,
+      "Markers": [
+        { "MarkerId": "ROAD07-01", "OffsetFromSegmentStart": 0 },
+        { "MarkerId": "ROAD07-02", "OffsetFromSegmentStart": 82.5 },
+        { "MarkerId": "ROAD07-03", "OffsetFromSegmentStart": 165 },
+        { "MarkerId": "ROAD07-04", "OffsetFromSegmentStart": 247.5 },
+        { "MarkerId": "ROAD07-05", "OffsetFromSegmentStart": 330 }
+      ]
+    },
+    {
+      "AssetId": "UX-BRIDGE-LINEAR",
+      "Description": "UX TEST BRIDGE - LINEAR ASSET",
+      "SegmentId": "SEG-BRIDGE-01",
+      "Location": "NORTH",
+      "TotalLength": 150,
+      "Markers": [
+        { "MarkerId": "BRG-01", "OffsetFromSegmentStart": 0 },
+        { "MarkerId": "BRG-02", "OffsetFromSegmentStart": 50 },
+        { "MarkerId": "BRG-03", "OffsetFromSegmentStart": 100 },
+        { "MarkerId": "BRG-04", "OffsetFromSegmentStart": 150 }
+      ]
+    }
+  ]
+}

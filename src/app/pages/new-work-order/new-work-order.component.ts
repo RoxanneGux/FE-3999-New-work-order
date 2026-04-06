@@ -1,4 +1,4 @@
-import { Component, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -26,6 +26,10 @@ import { TableTextSubtextComponent } from '../../components/table-text-subtext/t
 import { TaskCommentCellComponent } from '../../components/task-comment-cell/task-comment-cell.component';
 import { TaskCommentsDrawerComponent } from '../../components/task-comments-drawer/task-comments-drawer.component';
 import { MockMapComponent } from '../../components/mock-map/mock-map.component';
+import { Marker } from './linear-asset.interface';
+import { LinearAssetSliderComponent } from '../../components/linear-asset-slider/linear-asset-slider.component';
+import { DialogService } from '../../services/dialog.service';
+import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../components/dialogs/asset-search-dialog/asset-search-dialog.component';
 
 @Component({
   selector: 'app-new-work-order',
@@ -49,12 +53,15 @@ import { MockMapComponent } from '../../components/mock-map/mock-map.component';
     AwTableComponent,
     AwCheckboxComponent,
     TaskCommentsDrawerComponent,
-    MockMapComponent
+    MockMapComponent,
+    LinearAssetSliderComponent
   ],
   templateUrl: './new-work-order.component.html',
   styleUrl: './new-work-order.component.scss'
 })
 export class NewWorkOrderComponent {
+  private readonly _dialogService = inject(DialogService);
+
   // Drawer state
   showCommentDrawer = signal(false);
   drawerTaskId = signal('');
@@ -70,9 +77,12 @@ export class NewWorkOrderComponent {
   isPM = computed(() => this.selectedJobType() === 'PM');
   isPartRebuild = computed(() => this.selectedJobType() === 'PART_REBUILD');
   isRepair = computed(() => this.selectedJobType() === 'REPAIR');
+  isLinearAsset = computed(() => ['REPAIR_LINEAR', 'PM_LINEAR'].includes(this.selectedJobType()));
+  isRepairLinear = computed(() => this.selectedJobType() === 'REPAIR_LINEAR');
+  isPMLinear = computed(() => this.selectedJobType() === 'PM_LINEAR');
   showAssetField = computed(() => !this.isPartRebuild());
-  showMeters = computed(() => !this.isPartRebuild());
-  showWorkPosition = computed(() => !this.isPartRebuild());
+  showMeters = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
+  showWorkPosition = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
   showRepairReason = computed(() => !this.isPartRebuild());
 
   pageTitle = computed(() => {
@@ -116,13 +126,26 @@ export class NewWorkOrderComponent {
     partSuffix: new FormControl<SingleSelectOption | null>(null),
     restockLocation: new FormControl<SingleSelectOption | null>(null),
     quantityRequired: new FormControl(''),
-    fabricationNoCore: new FormControl(false)
+    fabricationNoCore: new FormControl(false),
+    // Linear Asset fields
+    location: new FormControl<SingleSelectOption | null>(null),
+    equipmentId: new FormControl(''),
+    fromMarker: new FormControl(''),
+    fromOffset: new FormControl('0.0000'),
+    toMarker: new FormControl(''),
+    toOffset: new FormControl('0.0000'),
+    fromOffsetSlider: new FormControl(0),
+    toOffsetSlider: new FormControl(0),
+    pmService: new FormControl(''),
+    overlapServiceRequests: new FormControl(false)
   });
 
   jobTypeOptions: SingleSelectOption[] = [
     { label: 'Repair', value: 'REPAIR' },
     { label: 'PM', value: 'PM' },
-    { label: 'Part Rebuild', value: 'PART_REBUILD' }
+    { label: 'Part Rebuild', value: 'PART_REBUILD' },
+    { label: 'Repair Linear Asset', value: 'REPAIR_LINEAR' },
+    { label: 'PM Linear Asset', value: 'PM_LINEAR' }
   ];
 
   validationOptions: SingleSelectOption[] = [
@@ -151,6 +174,28 @@ export class NewWorkOrderComponent {
     { label: 'NORTH - North Facility', value: 'NORTH' },
     { label: 'SOUTH - South Yard', value: 'SOUTH' }
   ];
+
+  locationOptions: SingleSelectOption[] = [
+    { label: 'MAIN - Main Shop', value: 'MAIN' },
+    { label: 'NORTH - North Facility', value: 'NORTH' },
+    { label: 'SOUTH - South Yard', value: 'SOUTH' },
+    { label: 'EAST - East Campus', value: 'EAST' },
+    { label: 'SHOP-A - Shop A', value: 'SHOP-A' }
+  ];
+
+  linearAssetMarkers = signal<Marker[]>([]);
+  linearAssetLength = signal<number>(0);
+
+  sliderFormGroup = computed(() => {
+    return new FormGroup({
+      fromMarker: this.woForm.get('fromMarker') as FormControl,
+      fromOffset: this.woForm.get('fromOffset') as FormControl,
+      toMarker: this.woForm.get('toMarker') as FormControl,
+      toOffset: this.woForm.get('toOffset') as FormControl,
+      fromOffsetSlider: this.woForm.get('fromOffsetSlider') as FormControl,
+      toOffsetSlider: this.woForm.get('toOffsetSlider') as FormControl,
+    });
+  });
 
   messagesText = `Other Open Work Orders
   Work Order Number        Type    Status   Scheduled         Reason  Service
@@ -274,6 +319,28 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       if (value && typeof value === 'object' && value.value) {
         this.generatedWoId.set(`${year}-${this._defaultLocation}-${this._woSequence}`);
         this.selectedJobType.set(value.value);
+
+        // Load default linear asset data for linear job types
+        if (['REPAIR_LINEAR', 'PM_LINEAR'].includes(value.value)) {
+          const defaultAsset = {
+            markers: [
+              { MarkerId: 'ROAD07-01', OffsetFromSegmentStart: 0 },
+              { MarkerId: 'ROAD07-02', OffsetFromSegmentStart: 82.5 },
+              { MarkerId: 'ROAD07-03', OffsetFromSegmentStart: 165 },
+              { MarkerId: 'ROAD07-04', OffsetFromSegmentStart: 247.5 },
+              { MarkerId: 'ROAD07-05', OffsetFromSegmentStart: 330 }
+            ],
+            length: 330
+          };
+          this.linearAssetMarkers.set(defaultAsset.markers);
+          this.linearAssetLength.set(defaultAsset.length);
+          this.woForm.get('fromMarker')?.setValue(defaultAsset.markers[0].MarkerId, { emitEvent: false });
+          this.woForm.get('fromOffset')?.setValue('0.0000', { emitEvent: false });
+          this.woForm.get('toMarker')?.setValue(defaultAsset.markers[defaultAsset.markers.length - 1].MarkerId, { emitEvent: false });
+          this.woForm.get('toOffset')?.setValue('0.0000', { emitEvent: false });
+          this.woForm.get('fromOffsetSlider')?.setValue(0, { emitEvent: false });
+          this.woForm.get('toOffsetSlider')?.setValue(defaultAsset.length, { emitEvent: false });
+        }
       } else {
         this.generatedWoId.set('');
         this.selectedJobType.set('');
@@ -282,7 +349,20 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   }
 
   onLookup(field: string): void {
+    if (field === 'asset') {
+      this.openAssetSearchDialog();
+      return;
+    }
     console.log('Lookup:', field);
+  }
+
+  private openAssetSearchDialog(): void {
+    this._dialogService.open(AssetSearchDialogComponent, undefined, (result?: AssetSearchDialogResult) => {
+      if (result?.action === 'go' && result.selectedAsset) {
+        const asset = result.selectedAsset;
+        this.woForm.get('asset')?.setValue(`(${asset.AssetId}) ${asset.Description}`);
+      }
+    });
   }
 
   openCommentDrawer(taskId: string, taskDescription: string, comment: string): void {

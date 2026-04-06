@@ -72,6 +72,29 @@
       </div>
       }
 
+      <!-- Location + Equipment ID (Linear Asset only) -->
+      @if (isLinearAsset()) {
+        <div class="form-row">
+          <div class="form-field">
+            <aw-form-field-label>Location</aw-form-field-label>
+            <aw-select-menu formControlName="location" ariaLabel="Location"
+              [singleSelectListItems]="locationOptions" [enableListReset]="true">
+            </aw-select-menu>
+          </div>
+          <div class="form-field">
+            <aw-form-field-label>Equipment ID</aw-form-field-label>
+            <div class="field-with-icon">
+              <aw-form-field>
+                <input AwInput formControlName="equipmentId" aria-label="Equipment ID" />
+              </aw-form-field>
+              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Equipment" (click)="onLookup('equipmentId')">
+                <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
       <!-- Meters Section (hidden for Part Rebuild) -->
       @if (showMeters()) {
         <div class="form-section">
@@ -157,6 +180,91 @@
               </button>
             </div>
           </div>
+        </div>
+      }
+
+      <!-- Work Position Section (Linear Asset only, expanded, not collapsible) -->
+      @if (isLinearAsset()) {
+        <div class="form-section">
+          <aw-divider class="section-divider" subTitle="Work Position"></aw-divider>
+
+          <app-linear-asset-slider
+            [markers]="linearAssetMarkers()"
+            [assetLength]="linearAssetLength()"
+            [formGroup]="sliderFormGroup()"
+            [allowEditing]="true">
+          </app-linear-asset-slider>
+
+          <aw-expansion-panel class="d-block" [title]="'Map'" [showExpander]="true" [expanded]="false">
+            <app-mock-map></app-mock-map>
+          </aw-expansion-panel>
+        </div>
+      }
+
+      <!-- Work Details (Linear Asset only) -->
+      @if (isLinearAsset()) {
+        <div class="form-section">
+          <aw-divider class="section-divider" subTitle="Work Details"></aw-divider>
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Repair Reason</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="repairReason" aria-label="Repair Reason" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Reason" (click)="onLookup('repairReason')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+            </div>
+            <div class="form-field">
+              <aw-form-field-label>Work Class</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Work Class" (click)="onLookup('workClass')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Service Status</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="serviceStatus" aria-label="Service Status" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Service Status" (click)="onLookup('serviceStatus')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+            </div>
+            <div class="form-field"></div>
+          </div>
+        </div>
+      }
+
+      <!-- Services and Inspections Due (PM Linear only) -->
+      @if (isPMLinear()) {
+        <div class="pm-services-section">
+          <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
+          <div class="table-responsive d-block">
+            <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
+          </div>
+        </div>
+      }
+
+      <!-- PM Service (PM Linear only) -->
+      @if (isPMLinear()) {
+        <div class="form-row">
+          <div class="form-field">
+            <aw-form-field-label>PM Service</aw-form-field-label>
+            <div class="field-with-icon">
+              <aw-form-field>
+                <input AwInput formControlName="pmService" aria-label="PM Service" />
+              </aw-form-field>
+              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search PM Service" (click)="onLookup('pmService')">
+                <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+              </button>
+            </div>
+          </div>
+          <div class="form-field"></div>
         </div>
       }
 
@@ -313,6 +421,14 @@
       <aw-expansion-panel class="d-block" [title]="'Existing Service Requests'" [showExpander]="true" [expanded]="true">
         <div class="table-responsive d-block p-3">
           <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData"></aw-table>
+          @if (serviceRequestData.length === 0 && isLinearAsset()) {
+            <div class="mt-3">
+              <aw-checkbox formControlName="overlapServiceRequests"
+                [checkBoxLabel]="'Retrieve service requests/defects that overlap with the work order position'"
+                [ariaLabel]="'Retrieve overlapping service requests'">
+              </aw-checkbox>
+            </div>
+          }
         </div>
       </aw-expansion-panel>
     </div>

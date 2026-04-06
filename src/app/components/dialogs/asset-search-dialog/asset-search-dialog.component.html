@@ -1,0 +1,10 @@
+<aw-dialog [ariaLabel]="'Asset Search Dialog'"
+           [visible]="true"
+           [dialogOptions]="dialogOptions()"
+           [columnsDefinition]="columnsDefinition"
+           [tableData]="tableData()"
+           [enableSingleSelection]="true"
+           [filterColumns]="['AssetId', 'Description', 'Type', 'Location', 'Status']"
+           (primaryAction)="onSelect($event)"
+           (secondaryAction)="onCancel()">
+</aw-dialog>

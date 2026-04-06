@@ -25,6 +25,7 @@ All mock data lives in `src/assets/mocks/`:
 | `messages.json` | Read-only messages text showing open work orders and PM service warnings |
 | `service-requests.json` | 4 existing service request records for the table |
 | `services-inspections-due.json` | Services/inspections due per asset — used when Job Type = PM |
+| `linear-assets.json` | 2 linear assets (ROAD07, UX-BRIDGE-LINEAR) with markers and offsets for the linear asset slider |
 
 ---
 
@@ -50,6 +51,8 @@ All mock data lives in `src/assets/mocks/`:
 | Repair | REPAIR | Default form — all fields shown |
 | PM | PM | Shows "Services and Inspections Due" table below Repair Reason / Work Class |
 | Part Rebuild | PART_REBUILD | (TBD — form field adjustments pending) |
+| Repair Linear Asset | REPAIR_LINEAR | Shows Location, Equipment ID, Work Position with linear asset slider (markers/offsets), Work Details (Repair Reason, Work Class, Service Status), Existing Service Requests with overlap checkbox |
+| PM Linear Asset | PM_LINEAR | Same as Repair Linear Asset plus Services and Inspections Due table and PM Service field |
 
 When no job type is selected, the page title reads "New Work Order".
 When a job type is selected, the title changes to "New Work Order - YYYY-LOCATION-###" (auto-generated).
@@ -80,6 +83,35 @@ When a job type is selected, the title changes to "New Work Order - YYYY-LOCATIO
 | SHOP-A | Shop A |
 
 Default location: **MAIN**
+
+---
+
+## Linear Assets (2 assets)
+
+Used when Job Type = Repair Linear Asset or PM Linear Asset. Default asset is ROAD07.
+
+### ROAD07 — HIGHWAY 07 - MAIN CORRIDOR
+
+| Marker ID | Offset From Segment Start |
+|---|---|
+| ROAD07-01 | 0 |
+| ROAD07-02 | 82.5 |
+| ROAD07-03 | 165 |
+| ROAD07-04 | 247.5 |
+| ROAD07-05 | 330 |
+
+Total Length: 330 | Segment: SEG-ROAD07-01 | Location: MAIN
+
+### UX-BRIDGE-LINEAR — UX TEST BRIDGE - LINEAR ASSET
+
+| Marker ID | Offset From Segment Start |
+|---|---|
+| BRG-01 | 0 |
+| BRG-02 | 50 |
+| BRG-03 | 100 |
+| BRG-04 | 150 |
+
+Total Length: 150 | Segment: SEG-BRIDGE-01 | Location: NORTH
 
 ---
 
@@ -193,3 +225,6 @@ No services or inspections due. Table shows empty state message.
 | Task comment drawer | Click the comment icon on BRK-001 or TRN-003 in the Existing Service Requests table |
 | Task without comment | OIL-002 and ENG-004 have no comment icon |
 | Work Position map | Expand the "Work Position" expansion panel |
+| Linear asset slider with markers | Select Job Type = Repair Linear Asset or PM Linear Asset (loads ROAD07 with 5 markers) |
+| PM Linear with services table | Select Job Type = PM Linear Asset (shows Services and Inspections Due table) |
+| Linear asset overlap checkbox | Select Job Type = Repair Linear Asset (overlap checkbox shown when service requests table is empty) |

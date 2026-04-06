@@ -1,0 +1,88 @@
+<div class="linear-slider-container">
+  <div [formGroup]="formGroup()">
+    <!-- From Marker + From Offset -->
+    <div class="field-row">
+      <div class="slider-field">
+        <aw-form-field-label>From Marker</aw-form-field-label>
+        <div class="field-with-icon">
+          <aw-form-field>
+            <input AwInput formControlName="fromMarker" aria-label="From Marker" readonly />
+          </aw-form-field>
+        </div>
+      </div>
+      <div class="slider-field">
+        <aw-form-field-label>From Offset</aw-form-field-label>
+        <aw-form-field>
+          <input AwInput formControlName="fromOffset" aria-label="From Offset"
+            (blur)="onOffsetBlur('from')" [readonly]="!allowEditing()" />
+        </aw-form-field>
+      </div>
+    </div>
+
+    <!-- Asset Length | Selected Length -->
+    <div class="length-row">
+      <div class="length">
+        <span class="aw-b-1-medium">Asset Length:</span>
+        <span class="aw-st-1-semi-bold number-display">{{ assetLength() }}</span>
+      </div>
+      <div class="length">
+        <span class="aw-b-1-medium">Selected Length:</span>
+        <span class="aw-st-1-semi-bold number-display">{{ selectedLength() }}</span>
+      </div>
+    </div>
+
+    <!-- Slider Row: From label + dual-range slider + To label -->
+    <div class="slider-row">
+      <span class="slider-label aw-c-1">From</span>
+      <div class="linear-slider">
+        <div class="range-track" [style.background]="sliderTrackStyle">
+          <input type="range" class="range-input range-from"
+            [min]="0" [max]="assetLength()" [step]="0.0001"
+            [value]="formGroup().get('fromOffsetSlider')?.value ?? 0"
+            [disabled]="!allowEditing()"
+            (input)="onSliderInput($event, 'from')"
+            (click)="onHandleClick('from')"
+            aria-label="From position slider" />
+          <input type="range" class="range-input range-to"
+            [min]="0" [max]="assetLength()" [step]="0.0001"
+            [value]="formGroup().get('toOffsetSlider')?.value ?? assetLength()"
+            [disabled]="!allowEditing()"
+            (input)="onSliderInput($event, 'to')"
+            (click)="onHandleClick('to')"
+            aria-label="To position slider" />
+        </div>
+
+        <!-- Axis row: marker labels positioned proportionally -->
+        <div class="axis-row">
+          @for (pos of markerPositions(); track pos.marker.MarkerId; let i = $index) {
+            <div class="label-wrapper" [style.width.%]="markerWidthPercentages()[i]">
+              <span class="axis-label" (click)="onMarkerClick(pos.marker)">
+                {{ pos.marker.MarkerId }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+      <span class="slider-label aw-c-1">To</span>
+    </div>
+
+    <!-- To Marker + To Offset -->
+    <div class="field-row">
+      <div class="slider-field">
+        <aw-form-field-label>To Marker</aw-form-field-label>
+        <div class="field-with-icon">
+          <aw-form-field>
+            <input AwInput formControlName="toMarker" aria-label="To Marker" readonly />
+          </aw-form-field>
+        </div>
+      </div>
+      <div class="slider-field">
+        <aw-form-field-label>To Offset</aw-form-field-label>
+        <aw-form-field>
+          <input AwInput formControlName="toOffset" aria-label="To Offset"
+            (blur)="onOffsetBlur('to')" [readonly]="!allowEditing()" />
+        </aw-form-field>
+      </div>
+    </div>
+  </div>
+</div>
