@@ -1,27 +1,126 @@
-# FeHarnessFE3999
+# FE-3999 — New Work Order Form Harness
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+UX sandbox for prototyping the New Work Order form with `@assetworks-llc/aw-component-lib`. This harness contains validated front-end logic and layout for 5 form variants that developers can reference when building the full-stack implementation.
 
-## Development server
+## What This Is
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+This is a standalone Angular 18 app that runs independently from FA-Suite. It uses mock data (no API calls) to render all work order form variants so designers and developers can review the UX before integration.
 
-## Code scaffolding
+The harness covers:
+- Repair, PM, and Part Rebuild work order forms
+- Linear asset forms (Repair + Linear, PM + Linear) with a dual-handle marker/offset slider
+- Asset search dialog with table variant
+- Dark/light mode toggle
+- Responsive layout down to mobile
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Quick Start
 
-## Build
+```bash
+npm install
+ng serve
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Navigate to `http://localhost:4200/`. The form loads with Job Type = Repair by default.
 
-## Running unit tests
+## How Developers Should Use This
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 1. Add to your workspace
 
-## Running end-to-end tests
+Clone this repo alongside FA-Suite in your IDE workspace. This lets you reference the harness code while building the real implementation:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```
+Your Workspace/
+├── FA-Suite/                    # Main app (your integration target)
+├── FE-3999/fe-harness-FE-3999/ # This harness (reference code)
+└── INN-ComponentLibrary/        # CCL source (optional)
+```
 
-## Further help
+### 2. Reference the component patterns
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The harness demonstrates how to wire up CCL components with reactive forms, signals, and conditional visibility. Key files to reference:
+
+| What | File |
+|------|------|
+| Form layout, conditional sections, signals | `src/app/pages/new-work-order/new-work-order.component.ts` |
+| Template with `@if` blocks for all 5 variants | `src/app/pages/new-work-order/new-work-order.component.html` |
+| Form SCSS (responsive, design tokens) | `src/app/pages/new-work-order/new-work-order.component.scss` |
+| Linear asset slider (dual-handle range) | `src/app/components/linear-asset-slider/` |
+| Asset search dialog (aw-dialog table variant) | `src/app/components/dialogs/asset-search-dialog/` |
+| Dialog service (programmatic dialog opening) | `src/app/services/dialog.service.ts` |
+| Base dialog component | `src/app/components/dialogs/base-dialog.component.ts` |
+| Theme toggle service | `src/app/services/theme.service.ts` |
+
+### 3. Replace mock data with real API calls
+
+All mock data is either inline in the component or in `src/assets/mocks/`. When integrating:
+- Replace hardcoded arrays with service calls
+- Replace `signal()` initial values with API response data
+- The form structure, `@if` guards, and computed signals stay the same
+
+
+## Seeing Different Form Variants
+
+The form layout changes based on two things: the Job Type dropdown and the selected asset type.
+
+| Job Type | Asset Type | What You See |
+|----------|-----------|--------------|
+| Repair | Fleet (default) | Meters, Repair Reason, Work Class, Service Status, Work Position (collapsible map) |
+| PM | Fleet | Same as Repair + Services and Inspections Due table |
+| Part Rebuild | Any | Part ID, Restock Location, Quantity, Fabrication checkbox, Work Class |
+| Repair | Linear | Location, Equipment ID, Work Position with slider + markers, Work Details |
+| PM | Linear | Same as Repair Linear + Services and Inspections Due table + PM Service field |
+
+To switch to a linear asset: click the search icon on the Asset field, then select ROAD07 or UX-BRIDGE-LINEAR from the dialog.
+
+See `MOCK-DATA-GUIDE.md` for the full list of mock data, assets, and quick scenarios.
+
+## Mock Data
+
+All mock data lives in `src/assets/mocks/` and inline in component files. The `MOCK-DATA-GUIDE.md` file is the single source of truth for what data is available and how to trigger each UI state.
+
+| File | Contents |
+|------|----------|
+| `assets.json` | 6 fleet assets with meter readings and units |
+| `linear-assets.json` | 2 linear assets (ROAD07, UX-BRIDGE-LINEAR) with markers |
+| `locations.json` | 5 locations |
+| `session.json` | Technician session profile |
+| `messages.json` | Read-only messages text |
+| `service-requests.json` | 4 existing service request records |
+| `services-inspections-due.json` | PM services/inspections data |
+
+## Project Structure
+
+```
+src/app/
+├── components/
+│   ├── dialogs/
+│   │   ├── asset-search-dialog/   # Asset lookup dialog (aw-dialog table variant)
+│   │   └── base-dialog.component.ts
+│   ├── linear-asset-slider/       # Dual-handle range slider with marker sync
+│   ├── mock-map/                  # Placeholder map component
+│   ├── table-text-subtext/        # Custom table cell renderer
+│   ├── task-comment-cell/         # Comment icon cell for service requests table
+│   └── task-comments-drawer/      # Read-only comment side drawer
+├── pages/
+│   └── new-work-order/            # Main form page
+│       ├── new-work-order.component.ts/html/scss
+│       └── linear-asset.interface.ts
+├── services/
+│   ├── dialog.service.ts          # Programmatic dialog opening
+│   └── theme.service.ts           # Dark/light mode toggle
+├── app.component.ts/html/scss     # Shell with navigation + theme FAB
+├── app.config.ts
+└── app.routes.ts
+```
+
+## Tech Stack
+
+- Angular 18 with standalone components
+- `@assetworks-llc/aw-component-lib` (CCL) for all UI components
+- SCSS with CCL design tokens (no Tailwind, no inline styles)
+- Reactive forms with Angular signals and computed values
+- `ChangeDetectionStrategy.OnPush` on all components
+
+## npm Authentication
+
+This project pulls from the private AssetWorks npm registry. You need a `.npmrc` file in the project root with valid credentials. Copy it from the FA-Suite repo if you don't have one.
