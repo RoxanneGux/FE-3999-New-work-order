@@ -421,7 +421,8 @@
         </div>
       </div>
 
-      <!-- Existing Service Requests (shared) -->
+      <!-- Existing Service Requests (hidden for Part Rebuild) -->
+      @if (!isPartRebuild()) {
       <aw-expansion-panel class="d-block" [title]="'Existing Service Requests'" [showExpander]="true" [expanded]="true">
         <div class="table-responsive d-block p-3">
           <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData"></aw-table>
@@ -435,6 +436,7 @@
           }
         </div>
       </aw-expansion-panel>
+      }
     </div>
   </form>
 </div>
