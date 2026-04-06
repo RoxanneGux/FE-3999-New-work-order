@@ -361,6 +361,23 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       if (result?.action === 'go' && result.selectedAsset) {
         const asset = result.selectedAsset;
         this.woForm.get('asset')?.setValue(`(${asset.AssetId}) ${asset.Description}`);
+
+        // Auto-switch job type based on asset type
+        const currentType = this.selectedJobType();
+        if (asset.Type === 'Linear') {
+          // Switch to linear variant, preserving PM vs Repair
+          const linearType = currentType === 'PM' || currentType === 'PM_LINEAR'
+            ? 'PM_LINEAR' : 'REPAIR_LINEAR';
+          const linearLabel = linearType === 'PM_LINEAR' ? 'PM Linear Asset' : 'Repair Linear Asset';
+          this.woForm.get('jobType')?.setValue({ label: linearLabel, value: linearType });
+        } else if (asset.Type === 'Fleet') {
+          // Switch back to standard variant if currently on linear
+          if (currentType === 'REPAIR_LINEAR') {
+            this.woForm.get('jobType')?.setValue({ label: 'Repair', value: 'REPAIR' });
+          } else if (currentType === 'PM_LINEAR') {
+            this.woForm.get('jobType')?.setValue({ label: 'PM', value: 'PM' });
+          }
+        }
       }
     });
   }
