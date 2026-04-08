@@ -57,8 +57,7 @@ export class TaskCommentsDrawerComponent implements AfterViewInit {
   public commentControl = new FormControl('');
 
   public readonly drawerInfo = computed<SideDrawerInformation>(() => ({
-    title: 'Task Comments',
-    subTitle: `(${this.taskId}) ${this.taskDescription}`
+    title: 'Comments'
   }));
 
   ngAfterViewInit(): void {
