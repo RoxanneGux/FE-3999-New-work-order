@@ -83,8 +83,12 @@ export class NewWorkOrderComponent {
   isRepair = computed(() => this.selectedJobType() === 'REPAIR');
   selectedAssetType = signal<'Fleet' | 'Linear'>('Fleet');
   meter1Units = signal<string>('miles');
+  meter1Reading = signal<number>(45230);
   meter2Units = signal<string>('miles');
+  meter2Reading = signal<number>(0);
   hasMeter2 = computed(() => !!this.meter2Units());
+  meter1Hint = computed(() => this.meter1Units() ? `Current: ${this.meter1Reading().toLocaleString()} ${this.meter1Units()}` : '');
+  meter2Hint = computed(() => this.meter2Units() ? `Current: ${this.meter2Reading().toLocaleString()} ${this.meter2Units()}` : '');
   isLinearAsset = computed(() => this.selectedAssetType() === 'Linear' && !this.isPartRebuild());
   isPMLinear = computed(() => this.isPM() && this.isLinearAsset());
   showAssetField = computed(() => !this.isPartRebuild());
@@ -363,7 +367,9 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         this.hasAsset.set(true);
         this.selectedAssetType.set(asset.Type as 'Fleet' | 'Linear');
         this.meter1Units.set(asset.Meter1Units || '');
+        this.meter1Reading.set(asset.Meter1Reading || 0);
         this.meter2Units.set(asset.Meter2Units || '');
+        this.meter2Reading.set(asset.Meter2Reading || 0);
         this.loadAssetRelatedData(asset.AssetId);
 
         if (asset.Type === 'Linear') {

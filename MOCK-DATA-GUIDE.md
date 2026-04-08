@@ -219,7 +219,8 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | Linear asset slider (ROAD07, 5 markers) | Select Repair or PM, click Asset search icon, select ROAD07 |
 | Linear asset slider (Bridge, 4 markers) | Select Repair or PM, click Asset search icon, select UX-BRIDGE-LINEAR |
 | PM Linear with services + PM Service | Select PM, then search and select ROAD07 or UX-BRIDGE-LINEAR |
-| Meter 2 hidden | Click Asset search icon, select K123-456, QA-C-001, or TX-TRUCK-07 (no Meter 2 units) |
-| Meter 2 with hours | Click Asset search icon, select QA-FLEET-002 or FL-VAN-03 (Meter 2 = hours) |
-| Meter 1 with hours | Click Asset search icon, select K123-456 (Meter 1 = hours) |
+| Meter 2 hidden | Click Asset search icon, select K123-456, QA-C-001, or TX-TRUCK-07 (no Meter 2) |
+| Meter hint with current reading | Select any fleet asset — hint shows "Current: 45,230 miles" etc. |
+| Meter 1 in hours | Click Asset search icon, select K123-456 (shows "Current: 12,500 hours") |
+| Meter 2 in hours | Click Asset search icon, select QA-FLEET-002 (shows "Current: 1,200 hours") or FL-VAN-03 (shows "Current: 800 hours") |
 | Dark mode | Click the sun/moon FAB button in the bottom-right corner |
