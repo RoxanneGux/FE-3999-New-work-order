@@ -150,6 +150,13 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | FL-VAN-03-CLEAN | 0 services (empty — just shows count) |
 | All other assets | 2 services (PMS1, QA-PM-A) |
 
+### Default Services Data (2 rows)
+
+| Service ID | Description | Reason ID | Reason Description | Date Due | Days Until Due | Days Late | Meter 1 Until Due | Meter 2 Until Due |
+|---|---|---|---|---|---|---|---|---|
+| PMS1 | PM SERVICE 1 | RPR-001 | Scheduled PM overdue | 04/30/2025 | LATE | 337 | (10100) | 0 |
+| QA-PM-A | QA PM SERVICE A | RPR-002 | Meter threshold exceeded | 04/30/2025 | LATE | 337 | (10100) | 0 |
+
 ---
 
 ## Warranty Work Options

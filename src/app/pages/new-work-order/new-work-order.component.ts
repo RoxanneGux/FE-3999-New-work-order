@@ -299,7 +299,13 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         componentData: { text: values[0], subText: values[1] }
       })
     },
-    { sort: true, align: 'center', type: TableCellTypes.Title, key: 'reason', label: 'Reason' },
+    { sort: true, align: 'left', type: TableCellTypes.Custom, key: 'reason', label: 'Reason',
+      combineFields: ['reasonId', 'reasonDescription'],
+      combineTemplate: (values: any[]) => ({
+        component: TableTextSubtextComponent,
+        componentData: { text: values[0], subText: values[1] }
+      })
+    },
     { sort: true, align: 'center', type: TableCellTypes.Title, key: 'dateDue', label: 'Date due' },
     { sort: true, align: 'center', type: TableCellTypes.Title, key: 'daysUntilDue', label: 'Days Until Due' },
     { sort: true, align: 'center', type: TableCellTypes.Title, key: 'daysLate', label: 'Days late' },
@@ -308,8 +314,8 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   ];
 
   servicesInspectionsData = signal<any[]>([
-    { addToWorkOrder: false, serviceId: 'PMS1', serviceDescription: 'PM SERVICE 1', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 },
-    { addToWorkOrder: false, serviceId: 'QA-PM-A', serviceDescription: 'QA PM SERVICE A', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 }
+    { addToWorkOrder: false, serviceId: 'PMS1', serviceDescription: 'PM SERVICE 1', reasonId: 'RPR-001', reasonDescription: 'Scheduled PM overdue', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 },
+    { addToWorkOrder: false, serviceId: 'QA-PM-A', serviceDescription: 'QA PM SERVICE A', reasonId: 'RPR-002', reasonDescription: 'Meter threshold exceeded', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 }
   ]);
 
   servicesInspectionsCount = computed(() => this.servicesInspectionsData().length);
@@ -440,8 +446,8 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     ];
 
     const defaultServicesInspections = [
-      { addToWorkOrder: false, serviceId: 'PMS1', serviceDescription: 'PM SERVICE 1', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 },
-      { addToWorkOrder: false, serviceId: 'QA-PM-A', serviceDescription: 'QA PM SERVICE A', reason: 'DATE', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 }
+      { addToWorkOrder: false, serviceId: 'PMS1', serviceDescription: 'PM SERVICE 1', reasonId: 'RPR-001', reasonDescription: 'Scheduled PM overdue', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 },
+      { addToWorkOrder: false, serviceId: 'QA-PM-A', serviceDescription: 'QA PM SERVICE A', reasonId: 'RPR-002', reasonDescription: 'Meter threshold exceeded', dateDue: '04/30/2025', daysUntilDue: 'LATE', daysLate: 337, meter1UntilDue: '(10100)', meter2UntilDue: 0 }
     ];
 
     // Assets with no service requests (empty table → shows overlap checkbox for linear)
