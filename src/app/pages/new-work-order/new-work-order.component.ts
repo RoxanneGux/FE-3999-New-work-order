@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -6,10 +6,12 @@ import {
   ActionBarRight,
   AwActionBarComponent,
   AwBreadCrumbComponent,
+  AwDateTimePickerComponent,
   AwDividerComponent,
   AwExpansionPanelComponent,
   AwFormFieldComponent,
   AwFormFieldLabelComponent,
+  AwFormMessageComponent,
   AwInputDirective,
   AwSelectMenuComponent,
   AwButtonDirective,
@@ -18,6 +20,7 @@ import {
   AwTableComponent,
   AwCheckboxComponent,
   AwSearchComponent,
+  AwToggleComponent,
   AwToolTipDirective,
   BreadCrumb,
   SingleSelectOption,
@@ -47,6 +50,7 @@ import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../compo
     AwExpansionPanelComponent,
     AwFormFieldComponent,
     AwFormFieldLabelComponent,
+    AwFormMessageComponent,
     AwInputDirective,
     AwSelectMenuComponent,
     AwButtonDirective,
@@ -55,7 +59,9 @@ import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../compo
     AwTableComponent,
     AwCheckboxComponent,
     AwSearchComponent,
+    AwToggleComponent,
     AwToolTipDirective,
+    AwDateTimePickerComponent,
     TaskCommentsDrawerComponent,
     MockMapComponent,
     LinearAssetSliderComponent
@@ -63,8 +69,30 @@ import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../compo
   templateUrl: './new-work-order.component.html',
   styleUrl: './new-work-order.component.scss'
 })
-export class NewWorkOrderComponent {
+export class NewWorkOrderComponent implements AfterViewInit {
+  @ViewChild('dateTimeInPicker') private _dateTimeInPicker!: AwDateTimePickerComponent;
+  @ViewChild('dateTimeDuePicker') private _dateTimeDuePicker!: AwDateTimePickerComponent;
+
   private readonly _dialogService = inject(DialogService);
+  private readonly _cdr = inject(ChangeDetectorRef);
+
+  /** Validation error for date-time-in date field. Null means no error. */
+  public readonly dateTimeInDateError = signal<string | null>(null);
+
+  /** Validation error for date-time-in time field. Null means no error. */
+  public readonly dateTimeInTimeError = signal<string | null>(null);
+
+  /** Validation error for date-time-due date field. Null means no error. */
+  public readonly dateTimeDueDateError = signal<string | null>(null);
+
+  /** Validation error for date-time-due time field. Null means no error. */
+  public readonly dateTimeDueTimeError = signal<string | null>(null);
+
+  /** Attach keydown and blur listeners to internal date/time inputs after view initializes. */
+  ngAfterViewInit(): void {
+    this.attachInputListeners(this._dateTimeInPicker, 'dateTimeIn');
+    this.attachInputListeners(this._dateTimeDuePicker, 'dateTimeDue');
+  }
 
   // Drawer state
   showCommentDrawer = signal(false);
@@ -97,8 +125,17 @@ export class NewWorkOrderComponent {
   showRepairReason = computed(() => !this.isPartRebuild());
 
   hasAsset = signal(true);
-  titleCharCount = signal(0);
-  notesCharCount = signal(0);
+
+  messagesText = `Other Open Work Orders
+  Work Order Number        Type    Status   Scheduled         Reason  Service
+  UX-TEST-1-2024-30        PM      OPEN                       Q2      C
+  UX-TEST-1-2024-34        REPAIR  PENDING                    QA-1
+Unit is 337 days late for PM service QA-PM-A - due date 04/30/2025
+Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
+  - life meter 1 due at 100`;
+
+  use24HourFormat = signal(false);
+  timeFormat = computed<'12h' | '24h'>(() => this.use24HourFormat() ? '24h' : '12h');
 
   pageTitle = computed(() => {
     const woId = this.generatedWoId();
@@ -123,11 +160,10 @@ export class NewWorkOrderComponent {
     workClass: new FormControl(''),
     serviceStatus: new FormControl(''),
     repairSite: new FormControl(''),
-    dateTimeInDate: new FormControl('03/21/2023'),
-    dateTimeInTime: new FormControl('2:00 PM'),
-    dateTimeDueDate: new FormControl('03/24/2023'),
-    dateTimeDueTime: new FormControl('2:00 PM'),
+    dateTimeIn: new FormControl<Date | null>(new Date(2023, 2, 21, 14, 0)),
+    dateTimeDue: new FormControl<Date | null>(new Date(2023, 2, 24, 14, 0)),
     vendor: new FormControl(''),
+    technician: new FormControl('(LOGGED in TECH ID) Tech Name'),
     contactName: new FormControl('Jane Doe'),
     phone: new FormControl('555-123-4567'),
     emailAddress: new FormControl('john.smith@company.com'),
@@ -135,6 +171,7 @@ export class NewWorkOrderComponent {
     financialProjectCode: new FormControl('(TECH001) John Smith'),
     account: new FormControl(''),
     warrantyWork: new FormControl<SingleSelectOption | null>({ label: 'No', value: 'NO' }),
+    messages: new FormControl(this.messagesText),
     notes: new FormControl(''),
     // Part Rebuild fields
     partId: new FormControl(''),
@@ -209,14 +246,6 @@ export class NewWorkOrderComponent {
       toOffsetSlider: this.woForm.get('toOffsetSlider') as FormControl,
     });
   });
-
-  messagesText = `Other Open Work Orders
-  Work Order Number        Type    Status   Scheduled         Reason  Service
-  UX-TEST-1-2024-30        PM      OPEN                       Q2      C
-  UX-TEST-1-2024-34        REPAIR  PENDING                    QA-1
-Unit is 337 days late for PM service QA-PM-A - due date 04/30/2025
-Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
-  - life meter 1 due at 100`;
 
   serviceRequestColumns: TableCellInput[] = [
     { type: TableCellTypes.Checkbox, key: 'selected', label: '' },
@@ -353,6 +382,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         this.selectedAssetType.set('Fleet');
         this.linearAssetMarkers.set([]);
         this.linearAssetLength.set(0);
+        this.woForm.get('messages')?.setValue('');
       }
     });
   }
@@ -365,12 +395,18 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     console.log('Lookup:', field);
   }
 
+  /** Update the 24-hour format signal when the toggle is changed. */
+  onTimeFormatToggle(value: boolean): void {
+    this.use24HourFormat.set(value);
+  }
+
   private openAssetSearchDialog(): void {
     this._dialogService.open(AssetSearchDialogComponent, undefined, (result?: AssetSearchDialogResult) => {
       if (result?.action === 'go' && result.selectedAsset) {
         const asset = result.selectedAsset;
         this.woForm.get('asset')?.setValue(`(${asset.AssetId}) ${asset.Description}`);
         this.hasAsset.set(true);
+        this.woForm.get('messages')?.setValue(this.messagesText);
         this.selectedAssetType.set(asset.Type as 'Fleet' | 'Linear');
         this.meter1Units.set(asset.Meter1Units || '');
         this.meter1Reading.set(asset.Meter1Reading || 0);
@@ -511,5 +547,101 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
   closeCommentDrawer(): void {
     this.showCommentDrawer.set(false);
+  }
+
+  /** Restrict date input to digits and forward slash. */
+  public onDateKeydown(event: KeyboardEvent): void {
+    const navigationKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
+    if (navigationKeys.includes(event.key)) return;
+    if (/^[0-9/]$/.test(event.key)) return;
+    event.preventDefault();
+  }
+
+  /** Restrict time input based on active time format. */
+  public onTimeKeydown(event: KeyboardEvent): void {
+    const navigationKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
+    if (navigationKeys.includes(event.key)) return;
+    if (this.timeFormat() === '24h') {
+      if (/^[0-9:]$/.test(event.key)) return;
+    } else {
+      if (/^[0-9:AaMmPp ]$/.test(event.key)) return;
+    }
+    event.preventDefault();
+  }
+
+  /** Validate date string on blur. Returns error message or null. */
+  public validateDate(value: string): string | null {
+    if (!value || value.trim() === '') return null;
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) return 'Invalid date format. Use MM/DD/YYYY';
+    const [monthStr, dayStr, yearStr] = value.split('/');
+    const month = parseInt(monthStr, 10);
+    const day = parseInt(dayStr, 10);
+    const year = parseInt(yearStr, 10);
+    if (month < 1 || month > 12) return 'Invalid date';
+    const daysInMonth = new Date(year, month, 0).getDate();
+    if (day < 1 || day > daysInMonth) return 'Invalid date';
+    return null;
+  }
+
+  /** Validate time string on blur based on format. Returns error message or null. */
+  public validateTime(value: string, format: '12h' | '24h'): string | null {
+    if (!value || value.trim() === '') return null;
+    if (format === '12h') {
+      if (!/^(0?[1-9]|1[0-2]):[0-5]\d\s?(AM|PM|am|pm)$/.test(value)) {
+        return 'Invalid time. Use HH:MM AM/PM (1-12)';
+      }
+    } else {
+      if (!/^([01]?\d|2[0-3]):[0-5]\d$/.test(value)) {
+        return 'Invalid time. Use HH:MM (0-23)';
+      }
+    }
+    return null;
+  }
+
+  /** Attach keydown and blur listeners to the internal date and time inputs of a date-time picker. */
+  private attachInputListeners(picker: AwDateTimePickerComponent, prefix: 'dateTimeIn' | 'dateTimeDue'): void {
+    if (!picker) return;
+    const dateInput = (picker as any).dateInput?.nativeElement;
+    const timeInput = (picker as any).timeInput?.nativeElement;
+    if (dateInput) {
+      dateInput.addEventListener('keydown', (e: KeyboardEvent) => this.onDateKeydown(e));
+      dateInput.addEventListener('blur', (e: Event) => {
+        const input = (e.target as HTMLInputElement);
+        const value = input.value.trim();
+        if (value) {
+          const error = this.validateDate(value);
+          if (error) {
+            // Clear garbage input — reset to CCL's committed display value
+            input.value = (picker as any).getDateDisplayValue?.() ?? '';
+          }
+          if (prefix === 'dateTimeIn') this.dateTimeInDateError.set(error);
+          else this.dateTimeDueDateError.set(error);
+        } else {
+          if (prefix === 'dateTimeIn') this.dateTimeInDateError.set(null);
+          else this.dateTimeDueDateError.set(null);
+        }
+        this._cdr.markForCheck();
+      });
+    }
+    if (timeInput) {
+      timeInput.addEventListener('keydown', (e: KeyboardEvent) => this.onTimeKeydown(e));
+      timeInput.addEventListener('blur', (e: Event) => {
+        const input = (e.target as HTMLInputElement);
+        const value = input.value.trim();
+        if (value) {
+          const error = this.validateTime(value, this.timeFormat());
+          if (error) {
+            // Clear garbage input — reset to CCL's committed display value
+            input.value = (picker as any).getTimeDisplayValue?.() ?? '';
+          }
+          if (prefix === 'dateTimeIn') this.dateTimeInTimeError.set(error);
+          else this.dateTimeDueTimeError.set(error);
+        } else {
+          if (prefix === 'dateTimeIn') this.dateTimeInTimeError.set(null);
+          else this.dateTimeDueTimeError.set(null);
+        }
+        this._cdr.markForCheck();
+      });
+    }
   }
 }

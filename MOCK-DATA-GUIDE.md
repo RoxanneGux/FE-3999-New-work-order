@@ -194,8 +194,9 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | Work Class | (empty) |
 | Service Status | (empty) |
 | Repair Site | (empty) |
-| Date Time In | 03/21/2023 / 2:00 PM |
-| Date Time Due | 03/24/2023 / 2:00 PM |
+| Date Time In | 03/21/2023 2:00 PM (Date object via `aw-date-time-picker`) |
+| Date Time Due | 03/24/2023 2:00 PM (Date object via `aw-date-time-picker`) |
+| Time Format | 12h (toggle between 12h / 24h via `aw-toggle` in Scheduling header) |
 | Vendor | (empty) |
 | Technician | (LOGGED in TECH ID) Tech Name (read-only) |
 | Contact Name | Jane Doe |
@@ -230,4 +231,6 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | Meter hint with current reading | Select any fleet asset — hint shows "Current: 45,230 miles" etc. |
 | Meter 1 in hours | Click Asset search icon, select K123-456 (shows "Current: 12,500 hours") |
 | Meter 2 in hours | Click Asset search icon, select QA-FLEET-002 (shows "Current: 1,200 hours") or FL-VAN-03 (shows "Current: 800 hours") |
+| Date/time picker overlay | Click the calendar icon next to Date Time In or Date Time Due in the Scheduling section |
+| 12h / 24h time format toggle | Toggle the "24h" switch in the Scheduling section header — both date/time pickers update |
 | Dark mode | Click the sun/moon FAB button in the bottom-right corner |
