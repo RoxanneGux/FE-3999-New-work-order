@@ -82,7 +82,7 @@
           <div class="form-field">
             <aw-form-field-label>Location</aw-form-field-label>
             <aw-select-menu formControlName="location" ariaLabel="Location"
-              [singleSelectListItems]="locationOptions" [enableListReset]="true">
+              [singleSelectListItems]="locationOptions" [enableListReset]="true" [enableSearch]="true">
             </aw-select-menu>
           </div>
           <div class="form-field">
@@ -104,7 +104,7 @@
         <div class="form-section">
           <aw-divider class="section-divider" subTitle="Meters"></aw-divider>
           <div class="form-row">
-            <div class="form-field">
+            <div class="form-field" style="max-width: 100%;">
               <aw-form-field-label>Meter 1</aw-form-field-label>
               <span class="field-subtitle">{{ meter1Hint() }}</span>
               <div class="field-pair">
@@ -113,8 +113,10 @@
                   [singleSelectListItems]="validationOptions" [enableListReset]="true"></aw-select-menu>
               </div>
             </div>
-            @if (hasMeter2()) {
-              <div class="form-field">
+          </div>
+          @if (hasMeter2()) {
+            <div class="form-row">
+              <div class="form-field" style="max-width: 100%;">
                 <aw-form-field-label>Meter 2</aw-form-field-label>
                 <span class="field-subtitle">{{ meter2Hint() }}</span>
                 <div class="field-pair">
@@ -123,8 +125,8 @@
                     [singleSelectListItems]="validationOptions" [enableListReset]="true"></aw-select-menu>
                 </div>
               </div>
-            }
-          </div>
+            </div>
+          }
           @if (showRepairReason()) {
             <div class="form-row">
               <div class="form-field">
@@ -154,7 +156,7 @@
           <div class="pm-services-section">
             <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
             @if (servicesInspectionsCount() > 0) {
-              <div class="table-responsive d-block">
+              <div class="table-responsive d-block" style="overflow-x: auto;">
                 <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
               </div>
             }
@@ -267,7 +269,7 @@
         <div class="pm-services-section">
           <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
           @if (servicesInspectionsCount() > 0) {
-            <div class="table-responsive d-block">
+            <div class="table-responsive d-block" style="overflow-x: auto;">
               <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
             </div>
           }

@@ -108,7 +108,7 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
 
 .field-pair {
   display: flex;
-  gap: 8px;
+  gap: 24px;
   align-items: flex-end;
 
   > aw-form-field,
@@ -119,6 +119,12 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
 
   > button {
     flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
   }
 }
 
@@ -168,7 +174,6 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   gap: 8px;
   width: 100%;
   max-width: $form-content-max-width;
-  overflow-x: auto;
 }
 
 // Empty state styling for aw-table (::ng-deep required to override CCL encapsulated styles)
@@ -201,4 +206,11 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
 
 .sr-table-container {
   padding-bottom: 16px;
+}
+
+// Fix truncated text in aw-select-menu dropdown options
+::ng-deep aw-select-menu .aw-options-list-item span {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
 }
