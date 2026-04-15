@@ -459,6 +459,31 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     this.servicesInspectionsData.set(emptyServicesInspectionsAssets.includes(assetId) ? [] : defaultServicesInspections);
   }
 
+  /** Block non-numeric keys on meter inputs (allow digits, decimal, backspace, tab, arrows). */
+  onMeterKeydown(event: KeyboardEvent): void {
+    const allowed = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Delete', 'Home', 'End'];
+    if (allowed.includes(event.key)) return;
+    if (event.key === '.' && !(event.target as HTMLInputElement).value.includes('.')) return;
+    if (event.key >= '0' && event.key <= '9') return;
+    event.preventDefault();
+  }
+
+  /** Enforce max 2 decimal places on meter inputs. */
+  onMeterInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement;
+    let val = input.value;
+    // Remove anything that's not a digit or decimal
+    val = val.replace(/[^0-9.]/g, '');
+    // Only allow one decimal point
+    const parts = val.split('.');
+    if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+    // Limit to 2 decimal places
+    if (parts.length === 2 && parts[1].length > 2) val = parts[0] + '.' + parts[1].substring(0, 2);
+    if (val !== input.value) {
+      this.woForm.get(controlName)?.setValue(val, { emitEvent: false });
+    }
+  }
+
   /** Handle search input on the Existing Service Requests table. */
   onServiceRequestSearch(query: string): void {
     // In a real app this would filter via API — here we just log it
