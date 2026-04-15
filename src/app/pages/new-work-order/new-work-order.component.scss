@@ -199,3 +199,10 @@ aw-date-time-picker {
   overflow: visible !important;
   text-overflow: unset !important;
 }
+
+// Fix: CCL aw-form-field applies pointer-events:none on readonly textarea wrappers,
+// which blocks scrolling. Override to restore scroll interaction.
+::ng-deep .aw-input:has(textarea[readonly]) {
+  pointer-events: auto !important;
+  cursor: default;
+}

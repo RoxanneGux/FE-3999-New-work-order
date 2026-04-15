@@ -69,8 +69,12 @@
         </div>
         <div class="form-field">
           <aw-form-field-label>Messages</aw-form-field-label>
+          <!-- Messages: readonly textarea with scrolling.
+               NOTE: CCL aw-form-field applies pointer-events:none on textarea[readonly] wrappers,
+               which blocks scrolling. A ::ng-deep override in the SCSS restores pointer-events:auto
+               so the scrollbar works while keeping the field non-editable. -->
           <aw-form-field>
-            <textarea AwInput formControlName="messages" [readOnly]="true" rows="6" aria-label="Messages"></textarea>
+            <textarea AwInput formControlName="messages" readonly rows="6" aria-label="Messages"></textarea>
           </aw-form-field>
         </div>
       </div>
