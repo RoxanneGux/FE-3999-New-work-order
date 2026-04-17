@@ -74,6 +74,22 @@ To switch to a linear asset: click the search icon on the Asset field, then sele
 
 See `MOCK-DATA-GUIDE.md` for the full list of mock data, assets, and quick scenarios.
 
+## Lookup Field Descriptions
+
+All 13 lookup fields (fields with a magnifying glass search button) resolve typed values against mock data on blur. When the user tabs off a lookup field, the input is uppercased and a description appears below the field using `aw-c-1` typography and `text-secondary` color. If no match is found, "NOT DEFINED" is shown instead. When the field is cleared (typing, X button, or select-all+delete), the description disappears immediately. Asset descriptions are also set when selecting via the Asset Search Dialog. Fields appearing in multiple form variants (Work Class, Repair Reason, Service Status) share the same description signals across all instances.
+
+| Behavior | Detail |
+|----------|--------|
+| Blur with valid ID | Input uppercased, matching description shown below field |
+| Blur with invalid ID | Input uppercased, "NOT DEFINED" shown below field |
+| Field cleared | Description hidden immediately |
+| Asset Search Dialog | Description set on selection |
+| Case sensitivity | Lookup is case-insensitive |
+| Styling | `aw-c-1` class, `text-secondary` color, 2px left margin |
+| Shared fields | Work Class, Repair Reason, Service Status work across all form variants |
+
+See `MOCK-DATA-GUIDE.md` for the full list of valid IDs per field.
+
 ## Mock Data
 
 All mock data lives in `src/assets/mocks/` and inline in component files. The `MOCK-DATA-GUIDE.md` file is the single source of truth for what data is available and how to trigger each UI state.

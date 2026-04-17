@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, Component, signal, computed, inject, ViewChild, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -75,6 +75,119 @@ export class NewWorkOrderComponent implements AfterViewInit {
 
   private readonly _dialogService = inject(DialogService);
   private readonly _cdr = inject(ChangeDetectorRef);
+
+  // ── Inline mock data for lookup field descriptions ──
+
+  /** Asset data from the asset search dialog for lookup resolution. */
+  private readonly _assetData: readonly { id: string; name: string }[] = [
+    { id: 'R-12345', name: 'MOTOR POOL SEDAN' },
+    { id: 'QA-FLEET-002', name: 'QA FLEET TRUCK 002' },
+    { id: 'K123-456', name: 'SERIES 50 DETROIT DIESEL GAS ENGINE' },
+    { id: 'QA-C-001', name: 'CARGO VAN 2500' },
+    { id: 'FL-VAN-03', name: 'FLEET VAN 03' },
+    { id: 'FL-VAN-03-CLEAN', name: 'FLEET VAN 03 - NO PM DUE' },
+    { id: 'TX-TRUCK-07', name: 'PICKUP TRUCK F-150' },
+    { id: 'ROAD07', name: 'HIGHWAY 07 - MAIN CORRIDOR' },
+    { id: 'ROAD07-EMPTY', name: 'HIGHWAY 07 - NO SERVICE REQUESTS' },
+    { id: 'UX-BRIDGE-LINEAR', name: 'UX TEST BRIDGE - LINEAR ASSET' },
+  ];
+
+  private readonly _mockPartData: readonly { id: string; name: string }[] = [
+    { id: 'PRT-001', name: 'Brake Pad Set' },
+    { id: 'PRT-002', name: 'Oil Filter' },
+    { id: 'PRT-003', name: 'Air Filter' },
+  ];
+
+  private readonly _mockEquipmentData: readonly { id: string; name: string }[] = [
+    { id: 'EQ-001', name: 'Excavator CAT 320' },
+    { id: 'EQ-002', name: 'Loader JD 544' },
+  ];
+
+  private readonly _mockRepairReasonData: readonly { id: string; name: string }[] = [
+    { id: 'RR-001', name: 'Scheduled Maintenance' },
+    { id: 'RR-002', name: 'Breakdown' },
+    { id: 'RR-003', name: 'Accident Damage' },
+  ];
+
+  private readonly _mockWorkClassData: readonly { id: string; name: string }[] = [
+    { id: 'WC-001', name: 'In-House Repair' },
+    { id: 'WC-002', name: 'Outsourced' },
+    { id: 'WC-003', name: 'Warranty' },
+  ];
+
+  private readonly _mockServiceStatusData: readonly { id: string; name: string }[] = [
+    { id: 'SS-001', name: 'Open' },
+    { id: 'SS-002', name: 'In Progress' },
+    { id: 'SS-003', name: 'Completed' },
+  ];
+
+  private readonly _mockRepairSiteData: readonly { id: string; name: string }[] = [
+    { id: 'RS-001', name: 'Main Shop' },
+    { id: 'RS-002', name: 'Field Service' },
+    { id: 'RS-003', name: 'Vendor Shop' },
+  ];
+
+  private readonly _mockPmServiceData: readonly { id: string; name: string }[] = [
+    { id: 'PM-001', name: 'Oil Change Service' },
+    { id: 'PM-002', name: 'Brake Inspection' },
+  ];
+
+  private readonly _mockVendorData: readonly { id: string; name: string }[] = [
+    { id: 'VND-001', name: 'AutoParts Inc.' },
+    { id: 'VND-002', name: 'Fleet Services LLC' },
+  ];
+
+  private readonly _mockContactData: readonly { id: string; name: string }[] = [
+    { id: 'CN-001', name: 'Jane Doe' },
+    { id: 'CN-002', name: 'Bob Wilson' },
+  ];
+
+  private readonly _mockPriorityData: readonly { id: string; name: string }[] = [
+    { id: '1', name: 'Emergency' },
+    { id: '2', name: 'Urgent' },
+    { id: '3', name: 'High' },
+    { id: '4', name: 'Normal' },
+    { id: '5', name: 'Low' },
+  ];
+
+  private readonly _mockFpcData: readonly { id: string; name: string }[] = [
+    { id: 'FPC-001', name: 'FY2026 Infrastructure' },
+    { id: 'FPC-002', name: 'FY2026 Fleet Renewal' },
+  ];
+
+  private readonly _mockAccountData: readonly { id: string; name: string }[] = [
+    { id: 'ACC-001', name: 'General Maintenance' },
+    { id: 'ACC-002', name: 'Fleet Operations' },
+  ];
+
+  // ── Description signals (13 fields × text + error) ──
+
+  public readonly assetDesc = signal<string>('');
+  public readonly assetDescError = signal<boolean>(false);
+  public readonly partIdDesc = signal<string>('');
+  public readonly partIdDescError = signal<boolean>(false);
+  public readonly equipmentIdDesc = signal<string>('');
+  public readonly equipmentIdDescError = signal<boolean>(false);
+  public readonly repairReasonDesc = signal<string>('');
+  public readonly repairReasonDescError = signal<boolean>(false);
+  public readonly workClassDesc = signal<string>('');
+  public readonly workClassDescError = signal<boolean>(false);
+  public readonly serviceStatusDesc = signal<string>('');
+  public readonly serviceStatusDescError = signal<boolean>(false);
+  public readonly repairSiteDesc = signal<string>('');
+  public readonly repairSiteDescError = signal<boolean>(false);
+  public readonly pmServiceDesc = signal<string>('');
+  public readonly pmServiceDescError = signal<boolean>(false);
+  public readonly vendorDesc = signal<string>('');
+  public readonly vendorDescError = signal<boolean>(false);
+  public readonly contactNameDesc = signal<string>('');
+  public readonly contactNameDescError = signal<boolean>(false);
+  public readonly priorityDesc = signal<string>('');
+  public readonly priorityDescError = signal<boolean>(false);
+  public readonly financialProjectCodeDesc = signal<string>('');
+  public readonly financialProjectCodeDescError = signal<boolean>(false);
+  public readonly accountDesc = signal<string>('');
+  public readonly accountDescError = signal<boolean>(false);
 
   /** Validation error for date-time-in date field. Null means no error. */
   public readonly dateTimeInDateError = signal<string | null>(null);
@@ -385,6 +498,8 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         this.woForm.get('messages')?.setValue('');
       }
     });
+
+    this._watchLookupFieldClears();
   }
 
   onLookup(field: string): void {
@@ -400,6 +515,155 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     this.use24HourFormat.set(value);
   }
 
+  /** Resolve a lookup field value against mock data. */
+  public lookupField(fieldName: string, value: string): { text: string; isError: boolean } {
+    const trimmed = (value ?? '').trim();
+    if (!trimmed) return { text: '', isError: false };
+
+    const lower = trimmed.toLowerCase();
+
+    switch (fieldName) {
+      case 'asset': {
+        const match = this._assetData.find(a => a.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'partId': {
+        const match = this._mockPartData.find(p => p.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'equipmentId': {
+        const match = this._mockEquipmentData.find(e => e.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'repairReason': {
+        const match = this._mockRepairReasonData.find(r => r.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'workClass': {
+        const match = this._mockWorkClassData.find(w => w.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'serviceStatus': {
+        const match = this._mockServiceStatusData.find(s => s.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'repairSite': {
+        const match = this._mockRepairSiteData.find(r => r.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'pmService': {
+        const match = this._mockPmServiceData.find(p => p.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'vendor': {
+        const match = this._mockVendorData.find(v => v.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'contactName': {
+        const match = this._mockContactData.find(c => c.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'priority': {
+        const match = this._mockPriorityData.find(p => p.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'financialProjectCode': {
+        const match = this._mockFpcData.find(f => f.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'account': {
+        const match = this._mockAccountData.find(a => a.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      default:
+        return { text: '', isError: false };
+    }
+  }
+
+  /** Handle blur on any lookup field — uppercase, resolve description, set signals. */
+  public onLookupFieldBlur(fieldName: string): void {
+    const control = this.woForm.get(fieldName);
+    const rawValue = (control?.value ?? '').toString();
+    const trimmed = rawValue.trim();
+
+    if (trimmed) {
+      control?.setValue(trimmed.toUpperCase(), { emitEvent: false });
+    }
+
+    const result = this.lookupField(fieldName, trimmed);
+
+    switch (fieldName) {
+      case 'asset':              this.assetDesc.set(result.text); this.assetDescError.set(result.isError); break;
+      case 'partId':             this.partIdDesc.set(result.text); this.partIdDescError.set(result.isError); break;
+      case 'equipmentId':        this.equipmentIdDesc.set(result.text); this.equipmentIdDescError.set(result.isError); break;
+      case 'repairReason':       this.repairReasonDesc.set(result.text); this.repairReasonDescError.set(result.isError); break;
+      case 'workClass':          this.workClassDesc.set(result.text); this.workClassDescError.set(result.isError); break;
+      case 'serviceStatus':      this.serviceStatusDesc.set(result.text); this.serviceStatusDescError.set(result.isError); break;
+      case 'repairSite':         this.repairSiteDesc.set(result.text); this.repairSiteDescError.set(result.isError); break;
+      case 'pmService':          this.pmServiceDesc.set(result.text); this.pmServiceDescError.set(result.isError); break;
+      case 'vendor':             this.vendorDesc.set(result.text); this.vendorDescError.set(result.isError); break;
+      case 'contactName':        this.contactNameDesc.set(result.text); this.contactNameDescError.set(result.isError); break;
+      case 'priority':           this.priorityDesc.set(result.text); this.priorityDescError.set(result.isError); break;
+      case 'financialProjectCode': this.financialProjectCodeDesc.set(result.text); this.financialProjectCodeDescError.set(result.isError); break;
+      case 'account':            this.accountDesc.set(result.text); this.accountDescError.set(result.isError); break;
+    }
+  }
+
+  /** Clear description immediately when a lookup field input is emptied (X button, select-all+delete). */
+  public onLookupFieldInput(fieldName: string, event: Event): void {
+    const value = (event.target as HTMLInputElement)?.value ?? '';
+    if (!value.trim()) {
+      const fieldSignalMap: Record<string, { desc: WritableSignal<string>; error: WritableSignal<boolean> }> = {
+        asset:                { desc: this.assetDesc, error: this.assetDescError },
+        partId:               { desc: this.partIdDesc, error: this.partIdDescError },
+        equipmentId:          { desc: this.equipmentIdDesc, error: this.equipmentIdDescError },
+        repairReason:         { desc: this.repairReasonDesc, error: this.repairReasonDescError },
+        workClass:            { desc: this.workClassDesc, error: this.workClassDescError },
+        serviceStatus:        { desc: this.serviceStatusDesc, error: this.serviceStatusDescError },
+        repairSite:           { desc: this.repairSiteDesc, error: this.repairSiteDescError },
+        pmService:            { desc: this.pmServiceDesc, error: this.pmServiceDescError },
+        vendor:               { desc: this.vendorDesc, error: this.vendorDescError },
+        contactName:          { desc: this.contactNameDesc, error: this.contactNameDescError },
+        priority:             { desc: this.priorityDesc, error: this.priorityDescError },
+        financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },
+        account:              { desc: this.accountDesc, error: this.accountDescError },
+      };
+      const signals = fieldSignalMap[fieldName];
+      if (signals) {
+        signals.desc.set('');
+        signals.error.set(false);
+      }
+    }
+  }
+
+  /** Subscribe to valueChanges on all lookup fields — clear description when value becomes empty. */
+  private _watchLookupFieldClears(): void {
+    const fieldSignalMap: Record<string, { desc: WritableSignal<string>; error: WritableSignal<boolean> }> = {
+      asset:                { desc: this.assetDesc, error: this.assetDescError },
+      partId:               { desc: this.partIdDesc, error: this.partIdDescError },
+      equipmentId:          { desc: this.equipmentIdDesc, error: this.equipmentIdDescError },
+      repairReason:         { desc: this.repairReasonDesc, error: this.repairReasonDescError },
+      workClass:            { desc: this.workClassDesc, error: this.workClassDescError },
+      serviceStatus:        { desc: this.serviceStatusDesc, error: this.serviceStatusDescError },
+      repairSite:           { desc: this.repairSiteDesc, error: this.repairSiteDescError },
+      pmService:            { desc: this.pmServiceDesc, error: this.pmServiceDescError },
+      vendor:               { desc: this.vendorDesc, error: this.vendorDescError },
+      contactName:          { desc: this.contactNameDesc, error: this.contactNameDescError },
+      priority:             { desc: this.priorityDesc, error: this.priorityDescError },
+      financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },
+      account:              { desc: this.accountDesc, error: this.accountDescError },
+    };
+
+    for (const [fieldName, signals] of Object.entries(fieldSignalMap)) {
+      this.woForm.get(fieldName)?.valueChanges.subscribe(value => {
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          signals.desc.set('');
+          signals.error.set(false);
+        }
+      });
+    }
+  }
+
   private openAssetSearchDialog(): void {
     this._dialogService.open(AssetSearchDialogComponent, undefined, (result?: AssetSearchDialogResult) => {
       if (result?.action === 'go' && result.selectedAsset) {
@@ -413,6 +677,11 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         this.meter2Units.set(asset.Meter2Units || '');
         this.meter2Reading.set(asset.Meter2Reading || 0);
         this.loadAssetRelatedData(asset.AssetId);
+
+        // Set asset description from dialog selection
+        const assetResult = this.lookupField('asset', asset.AssetId);
+        this.assetDesc.set(assetResult.text);
+        this.assetDescError.set(assetResult.isError);
 
         if (asset.Type === 'Linear') {
           this.loadLinearAssetData(asset.AssetId);

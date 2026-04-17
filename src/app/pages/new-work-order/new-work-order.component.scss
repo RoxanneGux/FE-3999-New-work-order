@@ -55,7 +55,7 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   @media (min-width: 768px) {
     flex-direction: row;
     gap: 24px;
-    align-items: flex-end;
+    align-items: flex-start;
   }
 }
 
@@ -205,4 +205,11 @@ aw-date-time-picker {
 ::ng-deep .aw-input:has(textarea[readonly]) {
   pointer-events: auto !important;
   cursor: default;
+}
+
+// Description text below lookup fields
+.field-desc {
+  display: block;
+  color: var(--system-text-text-secondary, #5b6670);
+  margin-left: 2px;
 }

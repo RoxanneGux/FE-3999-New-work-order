@@ -210,6 +210,127 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 
 ---
 
+## Lookup Field Descriptions
+
+All 13 lookup fields (fields with a magnifying glass search button) resolve typed values against mock data on blur. The input is uppercased, and a description appears below the field. If no match is found, "NOT DEFINED" is shown. Clearing the field hides the description.
+
+### Asset
+
+Resolves against inline asset data (same records as `assets.json`). Match key: `AssetId`. Also set when selecting an asset via the Asset Search Dialog.
+
+| Type this... | Description shown |
+|---|---|
+| R-12345 | MOTOR POOL SEDAN |
+| QA-FLEET-002 | QA FLEET TRUCK 002 |
+| K123-456 | SERIES 50 DETROIT DIESEL GAS ENGINE |
+| QA-C-001 | CARGO VAN 2500 |
+| FL-VAN-03 | FLEET VAN 03 |
+| FL-VAN-03-CLEAN | FLEET VAN 03 - NO PM DUE |
+| TX-TRUCK-07 | PICKUP TRUCK F-150 |
+| ROAD07 | HIGHWAY 07 - MAIN CORRIDOR |
+| ROAD07-EMPTY | HIGHWAY 07 - NO SERVICE REQUESTS |
+| UX-BRIDGE-LINEAR | UX TEST BRIDGE - LINEAR ASSET |
+
+### Part ID
+
+| Type this... | Description shown |
+|---|---|
+| PRT-001 | Brake Pad Set |
+| PRT-002 | Oil Filter |
+| PRT-003 | Air Filter |
+
+### Equipment ID
+
+| Type this... | Description shown |
+|---|---|
+| EQ-001 | Excavator CAT 320 |
+| EQ-002 | Loader JD 544 |
+
+### Repair Reason
+
+| Type this... | Description shown |
+|---|---|
+| RR-001 | Scheduled Maintenance |
+| RR-002 | Breakdown |
+| RR-003 | Accident Damage |
+
+### Work Class
+
+Appears in Repair, Linear work details, and Part Rebuild sections. All instances share the same description.
+
+| Type this... | Description shown |
+|---|---|
+| WC-001 | In-House Repair |
+| WC-002 | Outsourced |
+| WC-003 | Warranty |
+
+### Service Status
+
+Appears in Repair and Linear work details sections.
+
+| Type this... | Description shown |
+|---|---|
+| SS-001 | Open |
+| SS-002 | In Progress |
+| SS-003 | Completed |
+
+### Repair Site
+
+| Type this... | Description shown |
+|---|---|
+| RS-001 | Main Shop |
+| RS-002 | Field Service |
+| RS-003 | Vendor Shop |
+
+### PM Service
+
+Only visible when Job Type = PM and a linear asset is selected.
+
+| Type this... | Description shown |
+|---|---|
+| PM-001 | Oil Change Service |
+| PM-002 | Brake Inspection |
+
+### Vendor
+
+| Type this... | Description shown |
+|---|---|
+| VND-001 | AutoParts Inc. |
+| VND-002 | Fleet Services LLC |
+
+### Contact Name
+
+| Type this... | Description shown |
+|---|---|
+| CN-001 | Jane Doe |
+| CN-002 | Bob Wilson |
+
+### Priority
+
+| Type this... | Description shown |
+|---|---|
+| 1 | Emergency |
+| 2 | Urgent |
+| 3 | High |
+| 4 | Normal |
+| 5 | Low |
+
+### Financial Project Code
+
+| Type this... | Description shown |
+|---|---|
+| FPC-001 | FY2026 Infrastructure |
+| FPC-002 | FY2026 Fleet Renewal |
+
+### Account
+
+| Type this... | Description shown |
+|---|---|
+| ACC-001 | General Maintenance |
+| ACC-002 | Fleet Operations |
+
+---
+
 ## Quick Scenarios
 
 | I want to see... | How |
@@ -234,3 +355,10 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | Date/time picker overlay | Click the calendar icon next to Date Time In or Date Time Due in the Scheduling section |
 | 12h / 24h time format toggle | Toggle the "24h" switch in the Scheduling section header — both date/time pickers update |
 | Dark mode | Click the sun/moon FAB button in the bottom-right corner |
+| Lookup description — match found | Type `ACC-001` in Account, tab off → "General Maintenance" appears below the field, input uppercased |
+| Lookup description — no match | Type `invalid` in Account, tab off → "NOT DEFINED" appears below the field, input uppercased to "INVALID" |
+| Lookup description — empty field | Clear a lookup field that has a description → description disappears |
+| Lookup description — uppercase on blur | Type `prt-001` in Part ID, tab off → input becomes "PRT-001", description shows "Brake Pad Set" |
+| Lookup description — asset via dialog | Click Asset search icon, select an asset → description appears below Asset field |
+| Lookup description — all Repair fields | Select Repair, fill Repair Reason (`RR-001`), Work Class (`WC-002`), Service Status (`SS-001`), Repair Site (`RS-003`) → descriptions appear for each |
+| Lookup description — PM Linear fields | Select PM + linear asset (ROAD07), type `PM-001` in PM Service → "Oil Change Service" appears |

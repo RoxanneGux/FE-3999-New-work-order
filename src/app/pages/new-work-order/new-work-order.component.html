@@ -21,24 +21,32 @@
             <aw-form-field-label>Asset</aw-form-field-label>
             <div class="field-with-icon">
               <aw-form-field>
-                <input AwInput formControlName="asset" aria-label="Asset" />
+                <input AwInput formControlName="asset" aria-label="Asset"
+                  (blur)="onLookupFieldBlur('asset')" (input)="onLookupFieldInput('asset', $event)" />
               </aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Asset" (click)="onLookup('asset')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (assetDesc()) {
+              <span class="aw-c-1 field-desc">{{ assetDesc() }}</span>
+            }
           </div>
         } @else {
           <div class="form-field">
             <aw-form-field-label>Part ID</aw-form-field-label>
             <div class="field-with-icon">
               <aw-form-field>
-                <input AwInput formControlName="partId" aria-label="Part ID" />
+                <input AwInput formControlName="partId" aria-label="Part ID"
+                  (blur)="onLookupFieldBlur('partId')" (input)="onLookupFieldInput('partId', $event)" />
               </aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Part" (click)="onLookup('partId')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (partIdDesc()) {
+              <span class="aw-c-1 field-desc">{{ partIdDesc() }}</span>
+            }
           </div>
         }
       </div>
@@ -93,12 +101,16 @@
             <aw-form-field-label>Equipment ID</aw-form-field-label>
             <div class="field-with-icon">
               <aw-form-field>
-                <input AwInput formControlName="equipmentId" aria-label="Equipment ID" />
+                <input AwInput formControlName="equipmentId" aria-label="Equipment ID"
+                  (blur)="onLookupFieldBlur('equipmentId')" (input)="onLookupFieldInput('equipmentId', $event)" />
               </aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Equipment" (click)="onLookup('equipmentId')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (equipmentIdDesc()) {
+              <span class="aw-c-1 field-desc">{{ equipmentIdDesc() }}</span>
+            }
           </div>
         </div>
       }
@@ -138,20 +150,28 @@
               <div class="form-field">
                 <aw-form-field-label>Repair Reason</aw-form-field-label>
                 <div class="field-with-icon">
-                  <aw-form-field><input AwInput formControlName="repairReason" aria-label="Repair Reason" /></aw-form-field>
+                  <aw-form-field><input AwInput formControlName="repairReason" aria-label="Repair Reason"
+                    (blur)="onLookupFieldBlur('repairReason')" (input)="onLookupFieldInput('repairReason', $event)" /></aw-form-field>
                   <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Reason" (click)="onLookup('repairReason')">
                     <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
                   </button>
                 </div>
+                @if (repairReasonDesc()) {
+                  <span class="aw-c-1 field-desc">{{ repairReasonDesc() }}</span>
+                }
               </div>
               <div class="form-field">
                 <aw-form-field-label>Work Class</aw-form-field-label>
                 <div class="field-with-icon">
-                  <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class" /></aw-form-field>
+                  <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class"
+                    (blur)="onLookupFieldBlur('workClass')" (input)="onLookupFieldInput('workClass', $event)" /></aw-form-field>
                   <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Work Class" (click)="onLookup('workClass')">
                     <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
                   </button>
                 </div>
+                @if (workClassDesc()) {
+                  <span class="aw-c-1 field-desc">{{ workClassDesc() }}</span>
+                }
               </div>
             </div>
           }
@@ -181,20 +201,28 @@
           <div class="form-field">
             <aw-form-field-label>Service Status</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="serviceStatus" aria-label="Service Status" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="serviceStatus" aria-label="Service Status"
+                (blur)="onLookupFieldBlur('serviceStatus')" (input)="onLookupFieldInput('serviceStatus', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Service Status" (click)="onLookup('serviceStatus')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (serviceStatusDesc()) {
+              <span class="aw-c-1 field-desc">{{ serviceStatusDesc() }}</span>
+            }
           </div>
           <div class="form-field">
             <aw-form-field-label>Repair Site</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="repairSite" aria-label="Repair Site" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="repairSite" aria-label="Repair Site"
+                (blur)="onLookupFieldBlur('repairSite')" (input)="onLookupFieldInput('repairSite', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Site" (click)="onLookup('repairSite')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (repairSiteDesc()) {
+              <span class="aw-c-1 field-desc">{{ repairSiteDesc() }}</span>
+            }
           </div>
         </div>
       }
@@ -225,43 +253,59 @@
             <div class="form-field">
               <aw-form-field-label>Repair Reason</aw-form-field-label>
               <div class="field-with-icon">
-                <aw-form-field><input AwInput formControlName="repairReason" aria-label="Repair Reason" /></aw-form-field>
+                <aw-form-field><input AwInput formControlName="repairReason" aria-label="Repair Reason"
+                  (blur)="onLookupFieldBlur('repairReason')" (input)="onLookupFieldInput('repairReason', $event)" /></aw-form-field>
                 <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Repair Reason" (click)="onLookup('repairReason')">
                   <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
                 </button>
               </div>
+              @if (repairReasonDesc()) {
+                <span class="aw-c-1 field-desc">{{ repairReasonDesc() }}</span>
+              }
             </div>
             <div class="form-field">
               <aw-form-field-label>Work Class</aw-form-field-label>
               <div class="field-with-icon">
-                <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class" /></aw-form-field>
+                <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class"
+                  (blur)="onLookupFieldBlur('workClass')" (input)="onLookupFieldInput('workClass', $event)" /></aw-form-field>
                 <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Work Class" (click)="onLookup('workClass')">
                   <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
                 </button>
               </div>
+              @if (workClassDesc()) {
+                <span class="aw-c-1 field-desc">{{ workClassDesc() }}</span>
+              }
             </div>
           </div>
           <div class="form-row">
             <div class="form-field">
               <aw-form-field-label>Service Status</aw-form-field-label>
               <div class="field-with-icon">
-                <aw-form-field><input AwInput formControlName="serviceStatus" aria-label="Service Status" /></aw-form-field>
+                <aw-form-field><input AwInput formControlName="serviceStatus" aria-label="Service Status"
+                  (blur)="onLookupFieldBlur('serviceStatus')" (input)="onLookupFieldInput('serviceStatus', $event)" /></aw-form-field>
                 <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Service Status" (click)="onLookup('serviceStatus')">
                   <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
                 </button>
               </div>
+              @if (serviceStatusDesc()) {
+                <span class="aw-c-1 field-desc">{{ serviceStatusDesc() }}</span>
+              }
             </div>
             @if (isPMLinear()) {
               <div class="form-field">
                 <aw-form-field-label>PM Service</aw-form-field-label>
                 <div class="field-with-icon">
                   <aw-form-field>
-                    <input AwInput formControlName="pmService" aria-label="PM Service" />
+                    <input AwInput formControlName="pmService" aria-label="PM Service"
+                      (blur)="onLookupFieldBlur('pmService')" (input)="onLookupFieldInput('pmService', $event)" />
                   </aw-form-field>
                   <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search PM Service" (click)="onLookup('pmService')">
                     <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
                   </button>
                 </div>
+                @if (pmServiceDesc()) {
+                  <span class="aw-c-1 field-desc">{{ pmServiceDesc() }}</span>
+                }
               </div>
             } @else {
               <div class="form-field"></div>
@@ -304,11 +348,15 @@
             <div class="form-field">
               <aw-form-field-label>Work Class</aw-form-field-label>
               <div class="field-with-icon">
-                <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class" /></aw-form-field>
+                <aw-form-field><input AwInput formControlName="workClass" aria-label="Work Class"
+                  (blur)="onLookupFieldBlur('workClass')" (input)="onLookupFieldInput('workClass', $event)" /></aw-form-field>
                 <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Work Class" (click)="onLookup('workClass')">
                   <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
                 </button>
               </div>
+              @if (workClassDesc()) {
+                <span class="aw-c-1 field-desc">{{ workClassDesc() }}</span>
+              }
             </div>
           </div>
         </div>
@@ -368,11 +416,15 @@
           <div class="form-field">
             <aw-form-field-label>Vendor</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="vendor" aria-label="Vendor" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="vendor" aria-label="Vendor"
+                (blur)="onLookupFieldBlur('vendor')" (input)="onLookupFieldInput('vendor', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Vendor" (click)="onLookup('vendor')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (vendorDesc()) {
+              <span class="aw-c-1 field-desc">{{ vendorDesc() }}</span>
+            }
           </div>
           <div class="form-field"></div>
         </div>
@@ -391,11 +443,15 @@
           <div class="form-field">
             <aw-form-field-label>Contact Name</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="contactName" aria-label="Contact Name" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="contactName" aria-label="Contact Name"
+                (blur)="onLookupFieldBlur('contactName')" (input)="onLookupFieldInput('contactName', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Contact" (click)="onLookup('contactName')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (contactNameDesc()) {
+              <span class="aw-c-1 field-desc">{{ contactNameDesc() }}</span>
+            }
           </div>
         </div>
         <div class="form-row">
@@ -417,31 +473,43 @@
           <div class="form-field">
             <aw-form-field-label>Priority</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="priority" placeholder="(Default Priority ID) Priority Description" aria-label="Priority" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="priority" placeholder="(Default Priority ID) Priority Description" aria-label="Priority"
+                (blur)="onLookupFieldBlur('priority')" (input)="onLookupFieldInput('priority', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Priority" (click)="onLookup('priority')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (priorityDesc()) {
+              <span class="aw-c-1 field-desc">{{ priorityDesc() }}</span>
+            }
           </div>
           <div class="form-field">
             <aw-form-field-label>Financial Project Code</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="financialProjectCode" aria-label="Financial Project Code" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="financialProjectCode" aria-label="Financial Project Code"
+                (blur)="onLookupFieldBlur('financialProjectCode')" (input)="onLookupFieldInput('financialProjectCode', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Financial Project Code" (click)="onLookup('financialProjectCode')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (financialProjectCodeDesc()) {
+              <span class="aw-c-1 field-desc">{{ financialProjectCodeDesc() }}</span>
+            }
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Account</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="account" aria-label="Account" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="account" aria-label="Account"
+                (blur)="onLookupFieldBlur('account')" (input)="onLookupFieldInput('account', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Account" (click)="onLookup('account')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (accountDesc()) {
+              <span class="aw-c-1 field-desc">{{ accountDesc() }}</span>
+            }
           </div>
           <div class="form-field">
             <aw-form-field-label>Warranty Work</aw-form-field-label>
