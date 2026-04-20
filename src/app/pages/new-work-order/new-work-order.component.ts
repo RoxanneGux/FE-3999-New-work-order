@@ -136,8 +136,8 @@ export class NewWorkOrderComponent implements AfterViewInit {
   ];
 
   private readonly _mockContactData: readonly { id: string; name: string }[] = [
-    { id: 'CN-001', name: 'Jane Doe' },
-    { id: 'CN-002', name: 'Bob Wilson' },
+    { id: 'JANE-DOE', name: 'Jane Doe' },
+    { id: 'BOB-WILSON', name: 'Bob Wilson' },
   ];
 
   private readonly _mockPriorityData: readonly { id: string; name: string }[] = [
@@ -280,7 +280,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     dateTimeDue: new FormControl<Date | null>(new Date(2023, 2, 24, 14, 0)),
     vendor: new FormControl(''),
     technician: new FormControl('(LOGGED in TECH ID) Tech Name'),
-    contactName: new FormControl('Jane Doe'),
+    contactName: new FormControl('JANE-DOE'),
     phone: new FormControl('555-123-4567'),
     emailAddress: new FormControl('john.smith@company.com'),
     priority: new FormControl('(4) Normal'),
