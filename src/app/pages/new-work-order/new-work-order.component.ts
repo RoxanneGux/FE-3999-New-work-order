@@ -20,7 +20,6 @@ import {
   AwTableComponent,
   AwCheckboxComponent,
   AwSearchComponent,
-  AwToggleComponent,
   AwToolTipDirective,
   BreadCrumb,
   SingleSelectOption,
@@ -59,7 +58,6 @@ import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../compo
     AwTableComponent,
     AwCheckboxComponent,
     AwSearchComponent,
-    AwToggleComponent,
     AwToolTipDirective,
     AwDateTimePickerComponent,
     TaskCommentsDrawerComponent,
@@ -249,6 +247,11 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
   use24HourFormat = signal(false);
   timeFormat = computed<'12h' | '24h'>(() => this.use24HourFormat() ? '24h' : '12h');
+
+  timeFormatOptions: SingleSelectOption[] = [
+    { label: '12 Hour', value: '12h' },
+    { label: '24 Hour', value: '24h' },
+  ];
 
   pageTitle = computed(() => {
     const woId = this.generatedWoId();
@@ -510,9 +513,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     console.log('Lookup:', field);
   }
 
-  /** Update the 24-hour format signal when the toggle is changed. */
-  onTimeFormatToggle(value: boolean): void {
-    this.use24HourFormat.set(value);
+  /** Update the time format when the floating selector is changed. */
+  onTimeFormatChange(event: any): void {
+    const value = typeof event === 'object' ? event?.value : event;
+    this.use24HourFormat.set(value === '24h');
   }
 
   /** Resolve a lookup field value against mock data. */

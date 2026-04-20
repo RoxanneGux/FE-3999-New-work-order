@@ -364,16 +364,7 @@
 
       <!-- Scheduling (shared) -->
       <div class="form-section">
-        <div class="scheduling-header">
-          <aw-divider class="section-divider" subTitle="Scheduling"></aw-divider>
-          <aw-toggle
-            [ariaLabel]="'Toggle 24-hour time format'"
-            [toggleLabel]="'24h'"
-            [sizeSmall]="true"
-            (ngModelChange)="onTimeFormatToggle($event)"
-            [ngModel]="use24HourFormat()">
-          </aw-toggle>
-        </div>
+        <aw-divider class="section-divider" subTitle="Scheduling"></aw-divider>
         <div class="form-row">
           <div class="form-field">
             <aw-date-time-picker
@@ -563,6 +554,22 @@
 
 <div class="aw-sticky-footer">
   <aw-action-bar [actionsLeft]="actionLeft" [actionsRight]="actionRight"></aw-action-bar>
+</div>
+
+<!-- Floating settings panel -->
+<div class="floating-settings">
+  <aw-expansion-panel class="d-block" [title]="'Settings'" [showExpander]="true" [expanded]="true">
+    <div class="settings-content">
+      <aw-form-field-label>Time Format</aw-form-field-label>
+      <aw-select-menu
+        [ariaLabel]="'Time Format'"
+        [singleSelectListItems]="timeFormatOptions"
+        [enableListReset]="false"
+        [ngModel]="timeFormat()"
+        (ngModelChange)="onTimeFormatChange($event)"
+      ></aw-select-menu>
+    </div>
+  </aw-expansion-panel>
 </div>
 
 @if (showCommentDrawer()) {
