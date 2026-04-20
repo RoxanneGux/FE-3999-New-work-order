@@ -380,6 +380,7 @@
               formControlName="dateTimeIn"
               [timeFormat]="timeFormat()"
               [ariaLabel]="{ date: 'Date In', time: 'Time In' }"
+              [placeholder]="{ date: 'mm/dd/yyyy', time: timeFormat() === '12h' ? 'hh:mm AM/PM' : 'hh:mm' }"
               #dateTimeInPicker>
               <aw-form-field-label>Date Time In</aw-form-field-label>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Open date time in picker"
@@ -398,6 +399,7 @@
               formControlName="dateTimeDue"
               [timeFormat]="timeFormat()"
               [ariaLabel]="{ date: 'Date Due', time: 'Time Due' }"
+              [placeholder]="{ date: 'mm/dd/yyyy', time: timeFormat() === '12h' ? 'hh:mm AM/PM' : 'hh:mm' }"
               #dateTimeDuePicker>
               <aw-form-field-label>Date Time Due</aw-form-field-label>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Open date time due picker"
