@@ -65,6 +65,8 @@ $form-content-max-width: calc(#{$field-max-width} * 2 + 24px);
   gap: 4px;
   flex: 1;
   width: 100%;
+  position: relative;
+  padding-bottom: 20px;
 
   @media (min-width: 768px) {
     max-width: $field-max-width;
@@ -197,11 +199,13 @@ aw-date-time-picker {
   cursor: default;
 }
 
-// Description text below lookup fields
+// Description text below lookup fields — positioned absolutely so it doesn't
+// affect flex row height and cause adjacent fields to misalign.
 .field-desc {
-  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 2px;
   color: var(--system-text-text-secondary, #5b6670);
-  margin-left: 2px;
 }
 
 // Floating settings panel (matches FE-528 pattern)
