@@ -100,6 +100,30 @@
   pointer-events: none;
   appearance: none;
   -webkit-appearance: none;
+  z-index: 1;
+
+  /* "From" slider sits below "To" by default */
+  &.range-from {
+    z-index: 1;
+  }
+
+  /* "To" slider sits on top for mouse interaction */
+  &.range-to {
+    z-index: 2;
+  }
+
+  /* Allow keyboard focus — bring focused input to top and show focus ring */
+  &:focus {
+    z-index: 3;
+    outline: none;
+
+    &::-webkit-slider-thumb {
+      box-shadow: 0 0 0 3px rgba(0, 84, 166, 0.3);
+    }
+    &::-moz-range-thumb {
+      box-shadow: 0 0 0 3px rgba(0, 84, 166, 0.3);
+    }
+  }
 
   /* Webkit thumb */
   &::-webkit-slider-thumb {
