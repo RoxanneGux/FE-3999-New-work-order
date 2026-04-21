@@ -56,7 +56,11 @@
         <div class="axis-row">
           @for (pos of markerPositions(); track pos.marker.MarkerId; let i = $index) {
             <div class="label-wrapper" [style.width.%]="markerWidthPercentages()[i]">
-              <span class="axis-label" (click)="onMarkerClick(pos.marker)">
+              <span class="axis-label" role="button" tabindex="0"
+                [attr.aria-label]="'Jump to marker ' + pos.marker.MarkerId"
+                (click)="onMarkerClick(pos.marker)"
+                (keydown.enter)="onMarkerClick(pos.marker)"
+                (keydown.space)="onMarkerClick(pos.marker); $event.preventDefault()">
                 {{ pos.marker.MarkerId }}
               </span>
             </div>

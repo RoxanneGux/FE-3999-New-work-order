@@ -183,7 +183,7 @@
             <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
             @if (servicesInspectionsCount() > 0) {
               <div class="table-responsive d-block" style="overflow-x: auto;">
-                <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
+                <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()" aria-label="Services and inspections due"></aw-table>
               </div>
             }
           </div>
@@ -320,7 +320,7 @@
           <span class="aw-b-1-medium">Services and Inspections Due: {{ servicesInspectionsCount() }}</span>
           @if (servicesInspectionsCount() > 0) {
             <div class="table-responsive d-block" style="overflow-x: auto;">
-              <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()"></aw-table>
+              <aw-table [columnsDefinition]="servicesInspectionsColumns" [tableData]="servicesInspectionsData()" aria-label="Services and inspections due"></aw-table>
             </div>
           }
         </div>
@@ -544,7 +544,7 @@
         </div>
         <div class="sr-table-container">
           <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData()"
-            [tableOptions]="{ noDataPlaceholder: 'There are no existing service requests.' }"></aw-table>
+            [tableOptions]="{ noDataPlaceholder: 'There are no existing service requests.' }" aria-label="Existing service requests"></aw-table>
         </div>
       </aw-expansion-panel>
       }
