@@ -315,7 +315,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   ];
 
   validationOptions: SingleSelectOption[] = [
-    { label: 'Update the ticket record', value: 'UPDATE_TICKET' },
+    { label: 'Update the asset record', value: 'UPDATE_ASSET' },
     { label: 'Update transaction only', value: 'UPDATE_TRANSACTION' },
     { label: 'Update transaction only on fail', value: 'UPDATE_TRANSACTION_FAIL' }
   ];
