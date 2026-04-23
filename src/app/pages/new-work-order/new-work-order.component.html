@@ -407,6 +407,15 @@
         </div>
         <div class="form-row">
           <div class="form-field">
+            <aw-form-field-label>Location</aw-form-field-label>
+            <div class="field-with-icon">
+              <aw-form-field><input AwInput formControlName="schedulingLocation" aria-label="Location" /></aw-form-field>
+              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Location" (click)="onLookup('schedulingLocation')">
+                <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+              </button>
+            </div>
+          </div>
+          <div class="form-field">
             <aw-form-field-label>Vendor</aw-form-field-label>
             <div class="field-with-icon">
               <aw-form-field><input AwInput formControlName="vendor" aria-label="Vendor"
@@ -419,7 +428,6 @@
               <span class="aw-c-1 field-desc">{{ vendorDesc() }}</span>
             }
           </div>
-          <div class="form-field"></div>
         </div>
       </div>
 

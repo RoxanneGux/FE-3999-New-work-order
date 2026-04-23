@@ -278,6 +278,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     repairSite: new FormControl(''),
     dateTimeIn: new FormControl<Date | null>(new Date(2023, 2, 21, 14, 0)),
     dateTimeDue: new FormControl<Date | null>(new Date(2023, 2, 24, 14, 0)),
+    schedulingLocation: new FormControl(''),
     vendor: new FormControl(''),
     technician: new FormControl('(LOGGED in TECH ID) Tech Name'),
     contactName: new FormControl('JANE-DOE'),
