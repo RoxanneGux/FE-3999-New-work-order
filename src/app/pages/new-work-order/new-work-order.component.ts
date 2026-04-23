@@ -178,6 +178,8 @@ export class NewWorkOrderComponent implements AfterViewInit {
   public readonly pmServiceDescError = signal<boolean>(false);
   public readonly vendorDesc = signal<string>('');
   public readonly vendorDescError = signal<boolean>(false);
+  public readonly schedulingLocationDesc = signal<string>('');
+  public readonly schedulingLocationDescError = signal<boolean>(false);
   public readonly contactNameDesc = signal<string>('');
   public readonly contactNameDescError = signal<boolean>(false);
   public readonly priorityDesc = signal<string>('');
@@ -564,6 +566,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         const match = this._mockVendorData.find(v => v.id.toLowerCase() === lower);
         return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
       }
+      case 'schedulingLocation': {
+        const match = this.locationOptions.find(l => l.value.toLowerCase() === lower);
+        return match ? { text: match.label, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
       case 'contactName': {
         const match = this._mockContactData.find(c => c.id.toLowerCase() === lower);
         return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
@@ -607,6 +613,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       case 'repairSite':         this.repairSiteDesc.set(result.text); this.repairSiteDescError.set(result.isError); break;
       case 'pmService':          this.pmServiceDesc.set(result.text); this.pmServiceDescError.set(result.isError); break;
       case 'vendor':             this.vendorDesc.set(result.text); this.vendorDescError.set(result.isError); break;
+      case 'schedulingLocation': this.schedulingLocationDesc.set(result.text); this.schedulingLocationDescError.set(result.isError); break;
       case 'contactName':        this.contactNameDesc.set(result.text); this.contactNameDescError.set(result.isError); break;
       case 'priority':           this.priorityDesc.set(result.text); this.priorityDescError.set(result.isError); break;
       case 'financialProjectCode': this.financialProjectCodeDesc.set(result.text); this.financialProjectCodeDescError.set(result.isError); break;
@@ -628,6 +635,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         repairSite:           { desc: this.repairSiteDesc, error: this.repairSiteDescError },
         pmService:            { desc: this.pmServiceDesc, error: this.pmServiceDescError },
         vendor:               { desc: this.vendorDesc, error: this.vendorDescError },
+        schedulingLocation:  { desc: this.schedulingLocationDesc, error: this.schedulingLocationDescError },
         contactName:          { desc: this.contactNameDesc, error: this.contactNameDescError },
         priority:             { desc: this.priorityDesc, error: this.priorityDescError },
         financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },
@@ -653,6 +661,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       repairSite:           { desc: this.repairSiteDesc, error: this.repairSiteDescError },
       pmService:            { desc: this.pmServiceDesc, error: this.pmServiceDescError },
       vendor:               { desc: this.vendorDesc, error: this.vendorDescError },
+      schedulingLocation:  { desc: this.schedulingLocationDesc, error: this.schedulingLocationDescError },
       contactName:          { desc: this.contactNameDesc, error: this.contactNameDescError },
       priority:             { desc: this.priorityDesc, error: this.priorityDescError },
       financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },

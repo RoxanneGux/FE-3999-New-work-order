@@ -409,11 +409,15 @@
           <div class="form-field">
             <aw-form-field-label>Location</aw-form-field-label>
             <div class="field-with-icon">
-              <aw-form-field><input AwInput formControlName="schedulingLocation" aria-label="Location" /></aw-form-field>
+              <aw-form-field><input AwInput formControlName="schedulingLocation" aria-label="Location"
+                (blur)="onLookupFieldBlur('schedulingLocation')" (input)="onLookupFieldInput('schedulingLocation', $event)" /></aw-form-field>
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Location" (click)="onLookup('schedulingLocation')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
             </div>
+            @if (schedulingLocationDesc()) {
+              <span class="aw-c-1 field-desc" [class.field-desc-error]="schedulingLocationDescError()">{{ schedulingLocationDesc() }}</span>
+            }
           </div>
           <div class="form-field">
             <aw-form-field-label>Vendor</aw-form-field-label>
