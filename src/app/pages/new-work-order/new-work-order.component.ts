@@ -296,7 +296,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     notes: new FormControl(''),
     // Part Rebuild fields
     partId: new FormControl(''),
-    partSuffix: new FormControl<SingleSelectOption | null>(null),
+    partSuffix: new FormControl('00'),
     restockLocation: new FormControl<SingleSelectOption | null>(null),
     quantityRequired: new FormControl(''),
     fabricationNoCore: new FormControl(false),
@@ -329,14 +329,6 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     { label: 'No', value: 'NO' },
     { label: 'Yes', value: 'YES' },
     { label: 'Pending', value: 'PENDING' }
-  ];
-
-  partSuffixOptions: SingleSelectOption[] = [
-    { label: '1', value: '1' },
-    { label: '2', value: '2' },
-    { label: '3', value: '3' },
-    { label: '4', value: '4' },
-    { label: '5', value: '5' }
   ];
 
   restockLocationOptions: SingleSelectOption[] = [
@@ -539,6 +531,52 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   /** Placeholder for the Advanced Asset Search slide-in. */
   onAdvancedAssetSearch(): void {
     alert('This would open the Advanced Asset Search slide-in service.');
+  }
+
+  /** Placeholder for the Advanced Parts Lookup slide-in. */
+  onAdvancedPartSearch(): void {
+    alert('This would open the Advanced Parts Lookup slide-in service.');
+  }
+
+  /** Increment part suffix (00-99, always 2 digits). */
+  incrementPartSuffix(): void {
+    const current = parseInt(this.woForm.get('partSuffix')?.value || '0', 10);
+    const next = current >= 99 ? 99 : current + 1;
+    this.woForm.get('partSuffix')?.setValue(next.toString().padStart(2, '0'));
+  }
+
+  /** Decrement part suffix (00-99, always 2 digits). */
+  decrementPartSuffix(): void {
+    const current = parseInt(this.woForm.get('partSuffix')?.value || '0', 10);
+    const next = current <= 0 ? 0 : current - 1;
+    this.woForm.get('partSuffix')?.setValue(next.toString().padStart(2, '0'));
+  }
+
+  /** Restrict part suffix input to digits only, max 2 characters. */
+  onPartSuffixKeydown(event: KeyboardEvent): void {
+    const allowed = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 'Home', 'End'];
+    if (allowed.includes(event.key)) return;
+    if (event.key >= '0' && event.key <= '9') {
+      const input = event.target as HTMLInputElement;
+      if (input.value.length >= 2 && input.selectionStart === input.selectionEnd) {
+        event.preventDefault();
+      }
+      return;
+    }
+    event.preventDefault();
+  }
+
+  /** Pad part suffix to 2 digits on blur. */
+  onPartSuffixBlur(): void {
+    const ctrl = this.woForm.get('partSuffix');
+    if (!ctrl) return;
+    const val = ctrl.value || '0';
+    const num = parseInt(val, 10);
+    if (isNaN(num)) {
+      ctrl.setValue('00');
+    } else {
+      ctrl.setValue(Math.min(99, Math.max(0, num)).toString().padStart(2, '0'));
+    }
   }
 
   /** Update the time format when the floating selector is changed. */

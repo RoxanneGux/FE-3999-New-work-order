@@ -120,7 +120,7 @@ Total Length: 150 | Segment: SEG-BRIDGE-01 | Location: NORTH
 | Label | Value |
 |---|---|
 | (blank) | (none selected) |
-| Update the ticket record | UPDATE_TICKET |
+| Update the asset record | UPDATE_ASSET |
 | Update transaction only | UPDATE_TRANSACTION |
 | Update transaction only on fail | UPDATE_TRANSACTION_FAIL |
 
@@ -298,12 +298,24 @@ Only visible when Job Type = PM and a linear asset is selected.
 | VND-001 | AutoParts Inc. |
 | VND-002 | Fleet Services LLC |
 
+### Location (Scheduling + Linear Asset)
+
+Used in both the Scheduling section (all forms) and the Linear Asset section. Same data for both.
+
+| Type this... | Description shown |
+|---|---|
+| MAIN | Main Shop |
+| NORTH | North Facility |
+| SOUTH | South Yard |
+| EAST | East Campus |
+| SHOP-A | Shop A |
+
 ### Contact Name
 
 | Type this... | Description shown |
 |---|---|
-| CN-001 | Jane Doe |
-| CN-002 | Bob Wilson |
+| JANE-DOE | Jane Doe |
+| BOB-WILSON | Bob Wilson |
 
 ### Priority
 
@@ -338,7 +350,7 @@ Only visible when Job Type = PM and a linear asset is selected.
 | Full Repair form | Select Job Type = Repair (default asset R-12345 shows both meters with miles) |
 | Full PM form with services table | Select Job Type = PM (default asset R-12345 shows 2 services/inspections due) |
 | PM services/inspections empty state | Select PM, then search and select QA-FLEET-002 (shows "Services and Inspections Due: 0" with no table) |
-| Part Rebuild form | Select Job Type = Part Rebuild (shows Part ID, Restock Location, Quantity, Fabrication, Work Class) |
+| Part Rebuild form | Select Job Type = Part Rebuild (shows Part ID with Lookup button, Part Suffix with +/- stepper, Restock Location, Quantity, Fabrication, Work Class) |
 | Form with no WO ID | Clear the job type selection |
 | Empty form (no asset data) | Clear the asset field — messages, service requests, and services/inspections all clear |
 | Task comment drawer | Click the comment icon on BRK-001 or TRN-003 in the Existing Service Requests table |
@@ -355,6 +367,10 @@ Only visible when Job Type = PM and a linear asset is selected.
 | Date/time picker overlay | Click the calendar icon next to Date Time In or Date Time Due in the Scheduling section |
 | 12h / 24h time format toggle | Toggle the "24h" switch in the Scheduling section header — both date/time pickers update |
 | Dark mode | Click the sun/moon FAB button in the bottom-right corner |
+| Part Suffix stepper | Select Part Rebuild, click + or − buttons next to Part suffix — value increments/decrements (00-99, always 2 digits) |
+| Part Suffix masked input | Select Part Rebuild, type in the Part suffix field — only digits allowed, max 2 chars, pads to 2 digits on blur |
+| Location lookup (Scheduling) | Type `MAIN` in the Location field in the Scheduling section, tab off → "Main Shop" appears |
+| Location lookup (Linear) | Select a linear asset — Location auto-fills (e.g., ROAD07 → MAIN) |
 | Lookup description — match found | Type `ACC-001` in Account, tab off → "General Maintenance" appears below the field, input uppercased |
 | Lookup description — no match | Type `invalid` in Account, tab off → "NOT DEFINED" appears below the field, input uppercased to "INVALID" |
 | Lookup description — empty field | Clear a lookup field that has a description → description disappears |
