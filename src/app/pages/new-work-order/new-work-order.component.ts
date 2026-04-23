@@ -533,6 +533,11 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     alert('This would open the Advanced Asset Search slide-in service.');
   }
 
+  /** Placeholder for the Asset Enterprise Portal screen. */
+  onOpenAssetPortal(): void {
+    alert('This would open the Asset Enterprise Portal screen.');
+  }
+
   /** Placeholder for the Advanced Parts Lookup slide-in. */
   onAdvancedPartSearch(): void {
     alert('This would open the Advanced Parts Lookup slide-in service.');
