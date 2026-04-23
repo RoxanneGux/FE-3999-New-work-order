@@ -70,6 +70,13 @@ export class AssetSearchDialogComponent extends BaseDialogComponent {
     primaryButtonLabel: 'Select',
     secondaryButtonLabel: 'Cancel',
     enableSearch: true,
+    additionalActions: [
+      {
+        label: 'Advanced Search',
+        ariaLabel: 'Open Advanced Asset Search',
+        action: () => alert('This would open the Advanced Asset Search slide-in service.'),
+      },
+    ],
   }));
 
   onSelect(event: any): void {

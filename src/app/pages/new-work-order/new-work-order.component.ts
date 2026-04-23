@@ -536,6 +536,11 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     alert(`This button would open an aw-dialog with a table inside for searching ${label} records.`);
   }
 
+  /** Placeholder for the Advanced Asset Search slide-in. */
+  onAdvancedAssetSearch(): void {
+    alert('This would open the Advanced Asset Search slide-in service.');
+  }
+
   /** Update the time format when the floating selector is changed. */
   onTimeFormatChange(event: any): void {
     const value = typeof event === 'object' ? event?.value : event;

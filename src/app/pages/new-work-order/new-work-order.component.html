@@ -4,7 +4,7 @@
       <aw-bread-crumb [breadcrumbs]="breadcrumbs()" [ariaLabel]="'New Work Order Breadcrumbs'"></aw-bread-crumb>
     </div>
 
-    <aw-divider [inset]="false" [middleInset]="false" [title]="pageTitle()" [altColor]="false"></aw-divider>
+    <aw-divider [inset]="false" [middleInset]="false" [title]="'New Work Order'" [altColor]="false"></aw-divider>
 
     <div class="form-content">
       <!-- Row 1: Job Type + Asset/Part -->
@@ -27,6 +27,7 @@
               <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Asset" (click)="onLookup('asset')">
                 <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
               </button>
+              <button AwButton [buttonType]="'outlined'" (click)="onAdvancedAssetSearch()"><span>Lookup</span></button>
             </div>
             @if (assetDesc()) {
               <span class="aw-c-1 field-desc">{{ assetDesc() }}</span>
