@@ -93,9 +93,18 @@
         <div class="form-row">
           <div class="form-field">
             <aw-form-field-label>Location</aw-form-field-label>
-            <aw-select-menu formControlName="location" ariaLabel="Location"
-              [singleSelectListItems]="locationOptions" [enableListReset]="true" [enableSearch]="true">
-            </aw-select-menu>
+            <div class="field-with-icon">
+              <aw-form-field>
+                <input AwInput formControlName="location" aria-label="Location"
+                  (blur)="onLookupFieldBlur('location')" (input)="onLookupFieldInput('location', $event)" />
+              </aw-form-field>
+              <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Location" (click)="onLookup('location')">
+                <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+              </button>
+            </div>
+            @if (locationDesc()) {
+              <span class="aw-c-1 field-desc" [class.field-desc-error]="locationDescError()">{{ locationDesc() }}</span>
+            }
           </div>
           <div class="form-field">
             <aw-form-field-label>Equipment ID</aw-form-field-label>

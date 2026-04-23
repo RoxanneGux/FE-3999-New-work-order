@@ -188,6 +188,8 @@ export class NewWorkOrderComponent implements AfterViewInit {
   public readonly financialProjectCodeDescError = signal<boolean>(false);
   public readonly accountDesc = signal<string>('');
   public readonly accountDescError = signal<boolean>(false);
+  public readonly locationDesc = signal<string>('');
+  public readonly locationDescError = signal<boolean>(false);
 
   /** Validation error for date-time-in date field. Null means no error. */
   public readonly dateTimeInDateError = signal<string | null>(null);
@@ -299,7 +301,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     quantityRequired: new FormControl(''),
     fabricationNoCore: new FormControl(false),
     // Linear Asset fields
-    location: new FormControl<SingleSelectOption | null>(null),
+    location: new FormControl(''),
     equipmentId: new FormControl(''),
     fromMarker: new FormControl(''),
     fromOffset: new FormControl('0.0000'),
@@ -513,7 +515,25 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       this.openAssetSearchDialog();
       return;
     }
-    console.log('Lookup:', field);
+    // Browser alert placeholder for fields without a dedicated lookup dialog
+    const fieldLabels: Record<string, string> = {
+      partId: 'Part ID',
+      equipmentId: 'Equipment ID',
+      repairReason: 'Repair Reason',
+      workClass: 'Work Class',
+      serviceStatus: 'Service Status',
+      repairSite: 'Repair Site',
+      pmService: 'PM Service',
+      vendor: 'Vendor',
+      location: 'Location',
+      schedulingLocation: 'Location',
+      contactName: 'Contact Name',
+      priority: 'Priority',
+      financialProjectCode: 'Financial Project Code',
+      account: 'Account',
+    };
+    const label = fieldLabels[field] || field;
+    alert(`This button would open an aw-dialog with a table inside for searching ${label} records.`);
   }
 
   /** Update the time format when the floating selector is changed. */
@@ -570,6 +590,17 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         const match = this.locationOptions.find(l => l.value.toLowerCase() === lower);
         return match ? { text: match.label, isError: false } : { text: 'NOT DEFINED', isError: true };
       }
+      case 'location': {
+        const locationData: readonly { id: string; name: string }[] = [
+          { id: 'MAIN', name: 'Main Shop' },
+          { id: 'NORTH', name: 'North Facility' },
+          { id: 'SOUTH', name: 'South Yard' },
+          { id: 'EAST', name: 'East Campus' },
+          { id: 'SHOP-A', name: 'Shop A' },
+        ];
+        const match = locationData.find(l => l.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
       case 'contactName': {
         const match = this._mockContactData.find(c => c.id.toLowerCase() === lower);
         return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
@@ -618,6 +649,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       case 'priority':           this.priorityDesc.set(result.text); this.priorityDescError.set(result.isError); break;
       case 'financialProjectCode': this.financialProjectCodeDesc.set(result.text); this.financialProjectCodeDescError.set(result.isError); break;
       case 'account':            this.accountDesc.set(result.text); this.accountDescError.set(result.isError); break;
+      case 'location':           this.locationDesc.set(result.text); this.locationDescError.set(result.isError); break;
     }
   }
 
@@ -640,6 +672,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         priority:             { desc: this.priorityDesc, error: this.priorityDescError },
         financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },
         account:              { desc: this.accountDesc, error: this.accountDescError },
+        location:             { desc: this.locationDesc, error: this.locationDescError },
       };
       const signals = fieldSignalMap[fieldName];
       if (signals) {
@@ -666,6 +699,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       priority:             { desc: this.priorityDesc, error: this.priorityDescError },
       financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },
       account:              { desc: this.accountDesc, error: this.accountDescError },
+      location:             { desc: this.locationDesc, error: this.locationDescError },
     };
 
     for (const [fieldName, signals] of Object.entries(fieldSignalMap)) {
@@ -753,6 +787,18 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     this.woForm.get('toOffset')?.setValue('0.0000', { emitEvent: false });
     this.woForm.get('fromOffsetSlider')?.setValue(0, { emitEvent: false });
     this.woForm.get('toOffsetSlider')?.setValue(data.length, { emitEvent: false });
+
+    // Set location for the linear asset
+    const assetLocations: Record<string, string> = {
+      'ROAD07': 'MAIN',
+      'UX-BRIDGE-LINEAR': 'EAST',
+      'ROAD07-EMPTY': 'MAIN',
+    };
+    const loc = assetLocations[assetId] || 'MAIN';
+    this.woForm.get('location')?.setValue(loc, { emitEvent: false });
+    const locResult = this.lookupField('location', loc);
+    this.locationDesc.set(locResult.text);
+    this.locationDescError.set(locResult.isError);
   }
 
   /** Load per-asset service requests and services/inspections data. */
