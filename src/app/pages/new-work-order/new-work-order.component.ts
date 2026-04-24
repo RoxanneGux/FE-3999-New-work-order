@@ -164,6 +164,30 @@ export class NewWorkOrderComponent implements AfterViewInit {
     { id: 'ACC-002', name: 'Fleet Operations' },
   ];
 
+  private readonly _mockStandardJobsData: readonly { id: string; name: string }[] = [
+    { id: 'SJ-001', name: 'Oil Change' },
+    { id: 'SJ-002', name: 'Brake Inspection' },
+    { id: 'SJ-003', name: 'Tire Rotation' },
+  ];
+
+  private readonly _mockSymptomData: readonly { id: string; name: string }[] = [
+    { id: 'SYMP-001', name: 'Squealing Noise' },
+    { id: 'SYMP-002', name: 'Engine Misfire' },
+    { id: 'SYMP-003', name: 'Fluid Leak' },
+  ];
+
+  private readonly _mockFailCauseCodeData: readonly { id: string; name: string }[] = [
+    { id: 'FC-001', name: 'Wear and Tear' },
+    { id: 'FC-002', name: 'Manufacturing Defect' },
+    { id: 'FC-003', name: 'Operator Error' },
+  ];
+
+  private readonly _mockWacData: readonly { id: string; name: string }[] = [
+    { id: 'WAC-001', name: 'Replace Component' },
+    { id: 'WAC-002', name: 'Repair in Place' },
+    { id: 'WAC-003', name: 'Adjust Settings' },
+  ];
+
   // ── Description signals (13 fields × text + error) ──
 
   public readonly assetDesc = signal<string>('');
@@ -196,6 +220,14 @@ export class NewWorkOrderComponent implements AfterViewInit {
   public readonly accountDescError = signal<boolean>(false);
   public readonly locationDesc = signal<string>('');
   public readonly locationDescError = signal<boolean>(false);
+  public readonly srStandardJobsDesc = signal<string>('');
+  public readonly srStandardJobsDescError = signal<boolean>(false);
+  public readonly srSymptomDesc = signal<string>('');
+  public readonly srSymptomDescError = signal<boolean>(false);
+  public readonly srFailCauseCodeDesc = signal<string>('');
+  public readonly srFailCauseCodeDescError = signal<boolean>(false);
+  public readonly srWacDesc = signal<string>('');
+  public readonly srWacDescError = signal<boolean>(false);
 
   /** Validation error for date-time-in date field. Null means no error. */
   public readonly dateTimeInDateError = signal<string | null>(null);
@@ -245,6 +277,7 @@ export class NewWorkOrderComponent implements AfterViewInit {
   showWorkPosition = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
   showRepairReason = computed(() => !this.isPartRebuild());
   showEstimatedHours = computed(() => !this.isPartRebuild());
+  showNewServiceRequest = computed(() => this.isRepair());
 
   hasAsset = signal(true);
 
@@ -318,6 +351,12 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     toOffsetSlider: new FormControl(0),
     pmService: new FormControl(''),
     overlapServiceRequests: new FormControl(false),
+    // New Service Request fields (Repair only)
+    srStandardJobs: new FormControl(''),
+    srSymptom: new FormControl(''),
+    srFailCauseCode: new FormControl(''),
+    srWac: new FormControl(''),
+    srComments: new FormControl(''),
     estimatedAppointmentHours: new FormControl(''),
     comments: new FormControl('')
   });
@@ -567,6 +606,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       priority: 'Priority',
       financialProjectCode: 'Financial Project Code',
       account: 'Account',
+      srStandardJobs: 'Standard Jobs',
+      srSymptom: 'Symptom',
+      srFailCauseCode: 'Fail / Cause Code',
+      srWac: 'WAC',
     };
     const label = fieldLabels[field] || field;
     alert(`This button would open an aw-dialog with a table inside for searching ${label} records.`);
@@ -720,6 +763,22 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         const match = this._mockAccountData.find(a => a.id.toLowerCase() === lower);
         return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
       }
+      case 'srStandardJobs': {
+        const match = this._mockStandardJobsData.find(s => s.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'srSymptom': {
+        const match = this._mockSymptomData.find(s => s.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'srFailCauseCode': {
+        const match = this._mockFailCauseCodeData.find(f => f.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
+      case 'srWac': {
+        const match = this._mockWacData.find(w => w.id.toLowerCase() === lower);
+        return match ? { text: match.name, isError: false } : { text: 'NOT DEFINED', isError: true };
+      }
       default:
         return { text: '', isError: false };
     }
@@ -753,6 +812,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       case 'financialProjectCode': this.financialProjectCodeDesc.set(result.text); this.financialProjectCodeDescError.set(result.isError); break;
       case 'account':            this.accountDesc.set(result.text); this.accountDescError.set(result.isError); break;
       case 'location':           this.locationDesc.set(result.text); this.locationDescError.set(result.isError); break;
+      case 'srStandardJobs':  this.srStandardJobsDesc.set(result.text); this.srStandardJobsDescError.set(result.isError); break;
+      case 'srSymptom':       this.srSymptomDesc.set(result.text); this.srSymptomDescError.set(result.isError); break;
+      case 'srFailCauseCode': this.srFailCauseCodeDesc.set(result.text); this.srFailCauseCodeDescError.set(result.isError); break;
+      case 'srWac':           this.srWacDesc.set(result.text); this.srWacDescError.set(result.isError); break;
     }
   }
 
@@ -776,6 +839,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
         financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },
         account:              { desc: this.accountDesc, error: this.accountDescError },
         location:             { desc: this.locationDesc, error: this.locationDescError },
+        srStandardJobs:       { desc: this.srStandardJobsDesc, error: this.srStandardJobsDescError },
+        srSymptom:            { desc: this.srSymptomDesc, error: this.srSymptomDescError },
+        srFailCauseCode:      { desc: this.srFailCauseCodeDesc, error: this.srFailCauseCodeDescError },
+        srWac:                { desc: this.srWacDesc, error: this.srWacDescError },
       };
       const signals = fieldSignalMap[fieldName];
       if (signals) {
@@ -803,6 +870,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       financialProjectCode: { desc: this.financialProjectCodeDesc, error: this.financialProjectCodeDescError },
       account:              { desc: this.accountDesc, error: this.accountDescError },
       location:             { desc: this.locationDesc, error: this.locationDescError },
+      srStandardJobs:       { desc: this.srStandardJobsDesc, error: this.srStandardJobsDescError },
+      srSymptom:            { desc: this.srSymptomDesc, error: this.srSymptomDescError },
+      srFailCauseCode:      { desc: this.srFailCauseCodeDesc, error: this.srFailCauseCodeDescError },
+      srWac:                { desc: this.srWacDesc, error: this.srWacDescError },
     };
 
     for (const [fieldName, signals] of Object.entries(fieldSignalMap)) {

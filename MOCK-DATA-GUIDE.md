@@ -341,6 +341,38 @@ Used in both the Scheduling section (all forms) and the Linear Asset section. Sa
 | ACC-001 | General Maintenance |
 | ACC-002 | Fleet Operations |
 
+### Standard Jobs (New SR)
+
+| Type this... | Description shown |
+|---|---|
+| SJ-001 | Oil Change |
+| SJ-002 | Brake Inspection |
+| SJ-003 | Tire Rotation |
+
+### Symptom (New SR)
+
+| Type this... | Description shown |
+|---|---|
+| SYMP-001 | Squealing Noise |
+| SYMP-002 | Engine Misfire |
+| SYMP-003 | Fluid Leak |
+
+### Fail / Cause Code
+
+| Type this... | Description shown |
+|---|---|
+| FC-001 | Wear and Tear |
+| FC-002 | Manufacturing Defect |
+| FC-003 | Operator Error |
+
+### WAC
+
+| Type this... | Description shown |
+|---|---|
+| WAC-001 | Replace Component |
+| WAC-002 | Repair in Place |
+| WAC-003 | Adjust Settings |
+
 ---
 
 ## Quick Scenarios
@@ -378,3 +410,4 @@ Used in both the Scheduling section (all forms) and the Linear Asset section. Sa
 | Lookup description — asset via dialog | Click Asset search icon, select an asset → description appears below Asset field |
 | Lookup description — all Repair fields | Select Repair, fill Repair Reason (`RR-001`), Work Class (`WC-002`), Service Status (`SS-001`), Repair Site (`RS-003`) → descriptions appear for each |
 | Lookup description — PM Linear fields | Select PM + linear asset (ROAD07), type `PM-001` in PM Service → "Oil Change Service" appears |
+| New Service Request section | Select Repair job type — "New Service Request" section appears with Standard Jobs, Symptom, Fail/Cause Code, WAC lookups and Comments |

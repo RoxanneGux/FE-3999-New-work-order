@@ -626,6 +626,77 @@
         </div>
       </aw-expansion-panel>
       }
+
+      <!-- New Service Request (Repair only) -->
+      @if (showNewServiceRequest()) {
+        <div class="form-section">
+          <aw-divider class="section-divider" subTitle="New Service Request"></aw-divider>
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Standard Jobs</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="srStandardJobs" aria-label="Standard Jobs"
+                  (blur)="onLookupFieldBlur('srStandardJobs')" (input)="onLookupFieldInput('srStandardJobs', $event)" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Standard Jobs" (click)="onLookup('srStandardJobs')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+              @if (srStandardJobsDesc()) {
+                <span class="aw-c-1 field-desc" [class.field-desc-error]="srStandardJobsDescError()">{{ srStandardJobsDesc() }}</span>
+              }
+            </div>
+            <div class="form-field">
+              <aw-form-field-label>Symptom</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="srSymptom" aria-label="Symptom"
+                  (blur)="onLookupFieldBlur('srSymptom')" (input)="onLookupFieldInput('srSymptom', $event)" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Symptom" (click)="onLookup('srSymptom')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+              @if (srSymptomDesc()) {
+                <span class="aw-c-1 field-desc" [class.field-desc-error]="srSymptomDescError()">{{ srSymptomDesc() }}</span>
+              }
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Fail / Cause Code</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="srFailCauseCode" aria-label="Fail Cause Code"
+                  (blur)="onLookupFieldBlur('srFailCauseCode')" (input)="onLookupFieldInput('srFailCauseCode', $event)" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search Fail Cause Code" (click)="onLookup('srFailCauseCode')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+              @if (srFailCauseCodeDesc()) {
+                <span class="aw-c-1 field-desc" [class.field-desc-error]="srFailCauseCodeDescError()">{{ srFailCauseCodeDesc() }}</span>
+              }
+            </div>
+            <div class="form-field">
+              <aw-form-field-label>WAC</aw-form-field-label>
+              <div class="field-with-icon">
+                <aw-form-field><input AwInput formControlName="srWac" aria-label="WAC"
+                  (blur)="onLookupFieldBlur('srWac')" (input)="onLookupFieldInput('srWac', $event)" /></aw-form-field>
+                <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search WAC" (click)="onLookup('srWac')">
+                  <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                </button>
+              </div>
+              @if (srWacDesc()) {
+                <span class="aw-c-1 field-desc" [class.field-desc-error]="srWacDescError()">{{ srWacDesc() }}</span>
+              }
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Comments</aw-form-field-label>
+              <aw-form-message type="info" [maximumCharacters]="2000" [currentCharacterCount]="woForm.get('srComments')?.value ?? null"></aw-form-message>
+              <aw-form-field><textarea AwInput formControlName="srComments" rows="6" maxlength="2000" aria-label="Service Request Comments"></textarea></aw-form-field>
+            </div>
+            <div class="form-field"></div>
+          </div>
+        </div>
+      }
     </div>
   </form>
 </div>
