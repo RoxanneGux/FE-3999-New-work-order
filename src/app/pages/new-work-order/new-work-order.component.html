@@ -600,8 +600,8 @@
            NOTE: Empty state background override via ::ng-deep in new-work-order.component.scss -->
       @if (!isPartRebuild()) {
       <aw-expansion-panel class="d-block" [title]="'Existing Service Requests'" [showExpander]="true" [expanded]="true">
-        <!-- Search bar + archive button -->
-        <div class="sr-search-row">
+        <!-- Search bar + overlap toggle (linear only) -->
+        <div class="sr-search-row" style="flex-wrap: wrap;">
           <aw-search class="sr-search-input"
             [searchOptions]="[]"
             [placeholder]="'Search'"
@@ -609,14 +609,13 @@
             [ariaLabel]="'Search existing service requests'"
             [formControl]="srSearchControl">
           </aw-search>
-          @if (serviceRequestData().length === 0 && isLinearAsset()) {
-              <button AwButtonIconOnly AwToolTip type="button"
-                [buttonType]="'primary'" [disabled]="!hasAsset()"
-                ariaLabel="Retrieve overlapping service requests"
-                [tooltipMessage]="'Retrieve service requests/defects that overlap with the work order position'"
-                (click)="retrieveOverlappingServiceRequests()">
-                <aw-icon [iconName]="'archive'" [iconColor]="''"></aw-icon>
-              </button>
+          @if (isLinearAsset()) {
+            <aw-toggle
+              [ariaLabel]="'Retrieve overlapping service requests'"
+              [toggleLabel]="'Retrieve service requests / defects that overlap with work order position'"
+              [ngModel]="overlapToggle()"
+              (ngModelChange)="onOverlapToggle($event)">
+            </aw-toggle>
           }
         </div>
         <div class="sr-table-container">

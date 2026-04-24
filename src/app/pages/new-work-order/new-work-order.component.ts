@@ -21,6 +21,7 @@ import {
   AwCheckboxComponent,
   AwSearchComponent,
   AwToastComponent,
+  AwToggleComponent,
   AwToolTipDirective,
   BreadCrumb,
   SingleSelectOption,
@@ -62,6 +63,7 @@ import { ServiceRequestDialogComponent } from '../../components/dialogs/service-
     AwCheckboxComponent,
     AwSearchComponent,
     AwToastComponent,
+    AwToggleComponent,
     AwToolTipDirective,
     AwDateTimePickerComponent,
     TaskCommentsDrawerComponent,
@@ -487,6 +489,9 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
   /** Rows to pre-check in the Assign column via [selectedCheckboxRows]. */
   selectedServiceRequests = signal<any[]>([]);
+
+  /** Toggle for retrieving overlapping service requests (linear assets only). */
+  overlapToggle = signal(false);
 
   /** Search query for filtering the service requests table. */
   srSearchQuery = signal('');
@@ -1032,6 +1037,14 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     console.log('SR Search:', value);
     this.srSearchValue = value;
     this.srSearchQuery.set(value);
+  }
+
+  /** Handle overlap toggle — retrieve or clear overlapping service requests. */
+  onOverlapToggle(value: boolean): void {
+    this.overlapToggle.set(value);
+    if (value) {
+      this.retrieveOverlappingServiceRequests();
+    }
   }
 
   /** Retrieve overlapping service requests for the current linear asset position. */
