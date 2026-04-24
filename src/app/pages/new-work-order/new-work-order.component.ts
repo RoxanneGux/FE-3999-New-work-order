@@ -75,6 +75,7 @@ export class NewWorkOrderComponent implements AfterViewInit {
   @ViewChild('dateTimeInPicker') private _dateTimeInPicker!: AwDateTimePickerComponent;
   @ViewChild('dateTimeDuePicker') private _dateTimeDuePicker!: AwDateTimePickerComponent;
   @ViewChild('toast') private _toast!: AwToastComponent;
+  @ViewChild('srTable') private _srTable!: AwTableComponent;
 
   private readonly _dialogService = inject(DialogService);
   private readonly _cdr = inject(ChangeDetectorRef);
@@ -447,6 +448,24 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   /** Rows to pre-check in the Assign column via [selectedCheckboxRows]. */
   selectedServiceRequests = signal<any[]>([]);
 
+  /** Search query for filtering the service requests table. */
+  srSearchQuery = signal('');
+
+  /** Filtered service request data based on search query. */
+  filteredServiceRequestData = computed(() => {
+    const query = this.srSearchQuery().toLowerCase();
+    const data = this.serviceRequestData();
+    if (!query) return data;
+    return data.filter(row =>
+      row.taskId.toLowerCase().includes(query) ||
+      row.taskDescription.toLowerCase().includes(query) ||
+      row.symptomId.toLowerCase().includes(query) ||
+      row.symptomDescription.toLowerCase().includes(query) ||
+      row.enteredByName.toLowerCase().includes(query) ||
+      row.priorityDescription.toLowerCase().includes(query)
+    );
+  });
+
   // Services and Inspections Due table (PM only)
   servicesInspectionsColumns: TableCellInput[] = [
     { type: TableCellTypes.Checkbox, key: 'addToWorkOrder', label: 'Add to Work Order' },
@@ -520,6 +539,11 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     });
 
     this._watchLookupFieldClears();
+
+    // Wire up search control to filter service requests
+    this.srSearchControl.valueChanges.subscribe(val => {
+      this.srSearchQuery.set(val || '');
+    });
   }
 
   onLookup(field: string): void {
@@ -929,9 +953,13 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   }
 
   /** Handle search input on the Existing Service Requests table. */
-  onServiceRequestSearch(query: string): void {
-    // In a real app this would filter via API — here we just log it
-    console.log('Service request search:', query);
+  srSearchControl = new FormControl('');
+  srSearchValue = '';
+  onServiceRequestSearch(event: any): void {
+    const value = typeof event === 'string' ? event : '';
+    console.log('SR Search:', value);
+    this.srSearchValue = value;
+    this.srSearchQuery.set(value);
   }
 
   /** Retrieve overlapping service requests for the current linear asset position. */

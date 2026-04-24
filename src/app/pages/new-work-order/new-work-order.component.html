@@ -606,7 +606,8 @@
             [searchOptions]="[]"
             [placeholder]="'Search'"
             [disable]="!hasAsset()"
-            [ariaLabel]="'Search existing service requests'">
+            [ariaLabel]="'Search existing service requests'"
+            [formControl]="srSearchControl">
           </aw-search>
           @if (serviceRequestData().length === 0 && isLinearAsset()) {
               <button AwButtonIconOnly AwToolTip type="button"
@@ -619,7 +620,7 @@
           }
         </div>
         <div class="sr-table-container">
-          <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData()"
+          <aw-table #srTable [columnsDefinition]="serviceRequestColumns" [tableData]="filteredServiceRequestData()"
             [selectedCheckboxRows]="selectedServiceRequests()"
             [tableOptions]="{ noDataPlaceholder: 'There are no existing service requests.' }" aria-label="Existing service requests"></aw-table>
         </div>
