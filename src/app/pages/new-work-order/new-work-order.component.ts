@@ -20,6 +20,7 @@ import {
   AwTableComponent,
   AwCheckboxComponent,
   AwSearchComponent,
+  AwToastComponent,
   AwToolTipDirective,
   BreadCrumb,
   SingleSelectOption,
@@ -58,6 +59,7 @@ import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../compo
     AwTableComponent,
     AwCheckboxComponent,
     AwSearchComponent,
+    AwToastComponent,
     AwToolTipDirective,
     AwDateTimePickerComponent,
     TaskCommentsDrawerComponent,
@@ -70,6 +72,7 @@ import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../compo
 export class NewWorkOrderComponent implements AfterViewInit {
   @ViewChild('dateTimeInPicker') private _dateTimeInPicker!: AwDateTimePickerComponent;
   @ViewChild('dateTimeDuePicker') private _dateTimeDuePicker!: AwDateTimePickerComponent;
+  @ViewChild('toast') private _toast!: AwToastComponent;
 
   private readonly _dialogService = inject(DialogService);
   private readonly _cdr = inject(ChangeDetectorRef);
@@ -466,11 +469,14 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   servicesInspectionsCount = computed(() => this.servicesInspectionsData().length);
 
   get actionLeft(): ActionBarLeft[] {
-    return [{ textCallback: { title: 'Cancel', action: () => console.log('Cancel') } }];
+    return [{ textCallback: { title: 'Back', action: () => alert('This would navigate back to the initial New Work Order page.') } }];
   }
 
   get actionRight(): ActionBarRight[] {
-    return [{ buttonCallback: { label: 'Save', buttonType: 'outlined', action: () => console.log('Save', this.woForm.value) } }];
+    return [
+      { buttonCallback: { label: 'Cancel', buttonType: 'primary', action: () => alert('This would cancel and navigate back.') } },
+      { buttonCallback: { label: 'Save', buttonType: 'outlined', action: () => this.onSave() } }
+    ];
   }
 
   constructor() {
@@ -534,6 +540,17 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   /** Placeholder for the Advanced Asset Search slide-in. */
   onAdvancedAssetSearch(): void {
     alert('This would open the Advanced Asset Search slide-in service.');
+  }
+
+  /** Save the work order — shows success toast with WO number. */
+  onSave(): void {
+    const woNumber = this.generatedWoId() || 'NEW';
+    console.log('Save', this.woForm.value);
+    this._toast.showToast({
+      variant: 'success',
+      title: 'Success',
+      description: `Work Order ${woNumber} created successfully`,
+    });
   }
 
   /** Placeholder for the Asset Enterprise Portal screen. */
