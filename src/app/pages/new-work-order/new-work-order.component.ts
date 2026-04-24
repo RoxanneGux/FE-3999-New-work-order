@@ -238,6 +238,7 @@ export class NewWorkOrderComponent implements AfterViewInit {
   showMeters = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
   showWorkPosition = computed(() => !this.isPartRebuild() && !this.isLinearAsset());
   showRepairReason = computed(() => !this.isPartRebuild());
+  showEstimatedHours = computed(() => !this.isPartRebuild());
 
   hasAsset = signal(true);
 
@@ -310,7 +311,9 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     fromOffsetSlider: new FormControl(0),
     toOffsetSlider: new FormControl(0),
     pmService: new FormControl(''),
-    overlapServiceRequests: new FormControl(false)
+    overlapServiceRequests: new FormControl(false),
+    estimatedAppointmentHours: new FormControl(''),
+    comments: new FormControl('')
   });
 
   jobTypeOptions: SingleSelectOption[] = [

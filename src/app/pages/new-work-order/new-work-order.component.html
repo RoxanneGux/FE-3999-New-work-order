@@ -203,6 +203,26 @@
               </div>
             </div>
           }
+          @if (isPM()) {
+            <div class="form-row">
+              <div class="form-field">
+                <aw-form-field-label>PM Service</aw-form-field-label>
+                <div class="field-with-icon">
+                  <aw-form-field>
+                    <input AwInput formControlName="pmService" aria-label="PM Service"
+                      (blur)="onLookupFieldBlur('pmService')" (input)="onLookupFieldInput('pmService', $event)" />
+                  </aw-form-field>
+                  <button AwButtonIconOnly [buttonType]="'primary'" ariaLabel="Search PM Service" (click)="onLookup('pmService')">
+                    <aw-icon [iconName]="'search'" [iconColor]="''"></aw-icon>
+                  </button>
+                </div>
+                @if (pmServiceDesc()) {
+                  <span class="aw-c-1 field-desc">{{ pmServiceDesc() }}</span>
+                }
+              </div>
+              <div class="form-field"></div>
+            </div>
+          }
         </div>
 
         <!-- Services and Inspections Due (PM only) -->
@@ -461,6 +481,18 @@
             }
           </div>
         </div>
+        @if (showEstimatedHours()) {
+          <div class="form-row">
+            <div class="form-field">
+              <aw-form-field-label>Estimated Appointment Hours</aw-form-field-label>
+              <aw-form-field>
+                <input AwInput formControlName="estimatedAppointmentHours" placeholder="0.00" aria-label="Estimated Appointment Hours"
+                  type="text" inputmode="decimal" (keydown)="onMeterKeydown($event)" (input)="onMeterInput($event, 'estimatedAppointmentHours')" />
+              </aw-form-field>
+            </div>
+            <div class="form-field"></div>
+          </div>
+        }
       </div>
 
       <!-- Contact (shared) -->
@@ -556,7 +588,11 @@
             <aw-form-message type="info" [maximumCharacters]="2000" [currentCharacterCount]="woForm.get('notes')?.value ?? null"></aw-form-message>
             <aw-form-field><textarea AwInput formControlName="notes" rows="6" maxlength="2000" aria-label="Notes"></textarea></aw-form-field>
           </div>
-          <div class="form-field"></div>
+          <div class="form-field">
+            <aw-form-field-label>Comments</aw-form-field-label>
+            <aw-form-message type="info" [maximumCharacters]="2000" [currentCharacterCount]="woForm.get('comments')?.value ?? null"></aw-form-message>
+            <aw-form-field><textarea AwInput formControlName="comments" rows="6" maxlength="2000" aria-label="Comments"></textarea></aw-form-field>
+          </div>
         </div>
       </div>
 
