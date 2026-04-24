@@ -620,6 +620,7 @@
         </div>
         <div class="sr-table-container">
           <aw-table [columnsDefinition]="serviceRequestColumns" [tableData]="serviceRequestData()"
+            [selectedCheckboxRows]="selectedServiceRequests()"
             [tableOptions]="{ noDataPlaceholder: 'There are no existing service requests.' }" aria-label="Existing service requests"></aw-table>
         </div>
       </aw-expansion-panel>

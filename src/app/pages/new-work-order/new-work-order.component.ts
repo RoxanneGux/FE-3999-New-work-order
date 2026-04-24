@@ -444,6 +444,9 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High' }
   ]);
 
+  /** Rows to pre-check in the Assign column via [selectedCheckboxRows]. */
+  selectedServiceRequests = signal<any[]>([]);
+
   // Services and Inspections Due table (PM only)
   servicesInspectionsColumns: TableCellInput[] = [
     { type: TableCellTypes.Checkbox, key: 'addToWorkOrder', label: 'Add to Work Order' },
@@ -945,7 +948,6 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
   /** Open the Service Request detail dialog for a given task ID. */
   onViewServiceRequest(taskId: string): void {
-    // Find the service request data for this task
     const srData = this.serviceRequestData().find(sr => sr.taskId === taskId);
     if (!srData) return;
 
@@ -959,6 +961,14 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       enteredByName: srData.enteredByName,
       priorityId: srData.priorityId,
       priorityDescription: srData.priorityDescription,
+    }, (result?: any) => {
+      if (result?.action === 'select') {
+        // Add the row to selectedCheckboxRows so the Assign checkbox gets checked
+        const row = this.serviceRequestData().find(r => r.taskId === result.taskId);
+        if (row) {
+          this.selectedServiceRequests.update(current => [...current, row]);
+        }
+      }
     });
   }
 
