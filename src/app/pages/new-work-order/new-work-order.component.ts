@@ -334,7 +334,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   warrantyWorkOptions: SingleSelectOption[] = [
     { label: 'No', value: 'NO' },
     { label: 'Yes', value: 'YES' },
-    { label: 'Pending', value: 'PENDING' }
+    { label: 'Unknown', value: 'UNKNOWN' }
   ];
 
   restockLocationOptions: SingleSelectOption[] = [

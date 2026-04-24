@@ -165,7 +165,7 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 |---|---|
 | No | NO |
 | Yes | YES |
-| Pending | PENDING |
+| Unknown | UNKNOWN |
 
 ---
 
