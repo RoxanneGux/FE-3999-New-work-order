@@ -9,7 +9,11 @@ This is a standalone Angular 18 app that runs independently from FA-Suite. It us
 The harness covers:
 - Repair, PM, and Part Rebuild work order forms
 - Linear asset forms (Repair + Linear, PM + Linear) with a dual-handle marker/offset slider
+- New Service Request section (Repair only) with Standard Jobs, Symptom, Fail/Cause Code, WAC lookups, Comments, and Correction Performed (linear only)
+- Existing Service Requests table with search, comment drawer, detail dialog, and overlap toggle (linear)
+- Estimated Appointment Hours field (Repair and PM)
 - Asset search dialog with table variant
+- Service request detail dialog with navigate-away alert
 - Dark/light mode toggle
 - Responsive layout down to mobile
 
@@ -46,8 +50,10 @@ The harness demonstrates how to wire up CCL components with reactive forms, sign
 | Form SCSS (responsive, design tokens) | `src/app/pages/new-work-order/new-work-order.component.scss` |
 | Linear asset slider (dual-handle range) | `src/app/components/linear-asset-slider/` |
 | Asset search dialog (aw-dialog table variant) | `src/app/components/dialogs/asset-search-dialog/` |
+| Service request detail dialog | `src/app/components/dialogs/service-request-dialog/` |
 | Dialog service (programmatic dialog opening) | `src/app/services/dialog.service.ts` |
 | Base dialog component | `src/app/components/dialogs/base-dialog.component.ts` |
+| Task comments drawer (read-only side drawer) | `src/app/components/task-comments-drawer/` |
 | Theme toggle service | `src/app/services/theme.service.ts` |
 
 ### 3. Replace mock data with real API calls
@@ -64,11 +70,11 @@ The form layout changes based on two things: the Job Type dropdown and the selec
 
 | Job Type | Asset Type | What You See |
 |----------|-----------|--------------|
-| Repair | Fleet (default) | Meters, Repair Reason, Work Class, Service Status, Work Position (collapsible map) |
-| PM | Fleet | Same as Repair + Services and Inspections Due table |
+| Repair | Fleet (default) | Meters, Repair Reason, Work Class, Service Status, Work Position (collapsible map), Estimated Appointment Hours, New Service Request section (Standard Jobs, Symptom, Fail/Cause Code, WAC, Comments) |
+| PM | Fleet | Same as Repair (minus New SR section) + Services and Inspections Due table |
 | Part Rebuild | Any | Part ID, Restock Location, Quantity, Fabrication checkbox, Work Class |
-| Repair | Linear | Location, Equipment ID, Work Position with slider + markers, Work Details |
-| PM | Linear | Same as Repair Linear + Services and Inspections Due table + PM Service field |
+| Repair | Linear | Location, Equipment ID, Work Position with slider + markers, Work Details, Estimated Appointment Hours, New Service Request section (with Correction Performed), Overlap toggle |
+| PM | Linear | Same as Repair Linear (minus New SR section) + Services and Inspections Due table + PM Service field |
 
 To switch to a linear asset: click the search icon on the Asset field, then select ROAD07 or UX-BRIDGE-LINEAR from the dialog.
 
@@ -76,7 +82,7 @@ See `MOCK-DATA-GUIDE.md` for the full list of mock data, assets, and quick scena
 
 ## Lookup Field Descriptions
 
-All 13 lookup fields (fields with a magnifying glass search button) resolve typed values against mock data on blur. When the user tabs off a lookup field, the input is uppercased and a description appears below the field using `aw-c-1` typography and `text-secondary` color. If no match is found, "NOT DEFINED" is shown instead. When the field is cleared (typing, X button, or select-all+delete), the description disappears immediately. Asset descriptions are also set when selecting via the Asset Search Dialog. Fields appearing in multiple form variants (Work Class, Repair Reason, Service Status) share the same description signals across all instances.
+All 19 lookup fields (fields with a magnifying glass search button) resolve typed values against mock data on blur. When the user tabs off a lookup field, the input is uppercased and a description appears below the field using `aw-c-1` typography and `text-secondary` color. If no match is found, "NOT DEFINED" is shown instead. When the field is cleared (typing, X button, or select-all+delete), the description disappears immediately. Asset descriptions are also set when selecting via the Asset Search Dialog. Fields appearing in multiple form variants (Work Class, Repair Reason, Service Status) share the same description signals across all instances.
 
 | Behavior | Detail |
 |----------|--------|
@@ -97,7 +103,7 @@ All mock data lives in `src/assets/mocks/` and inline in component files. The `M
 | File | Contents |
 |------|----------|
 | `assets.json` | 6 fleet assets with meter readings and units |
-| `linear-assets.json` | 2 linear assets (ROAD07, UX-BRIDGE-LINEAR) with markers |
+| `linear-assets.json` | 2 linear assets (ROAD07, UX-BRIDGE-LINEAR) with markers; ROAD07-EMPTY variant for empty SR testing |
 | `locations.json` | 5 locations |
 | `session.json` | Technician session profile |
 | `messages.json` | Read-only messages text |
@@ -111,10 +117,12 @@ src/app/
 ├── components/
 │   ├── dialogs/
 │   │   ├── asset-search-dialog/   # Asset lookup dialog (aw-dialog table variant)
+│   │   ├── service-request-dialog/ # Service request detail dialog with navigate-away alert
 │   │   └── base-dialog.component.ts
 │   ├── linear-asset-slider/       # Dual-handle range slider with marker sync
 │   ├── mock-map/                  # Placeholder map component
 │   ├── table-text-subtext/        # Custom table cell renderer
+│   ├── table-link-cell/           # Clickable link cell for service requests table
 │   ├── task-comment-cell/         # Comment icon cell for service requests table
 │   └── task-comments-drawer/      # Read-only comment side drawer
 ├── pages/

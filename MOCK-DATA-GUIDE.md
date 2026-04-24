@@ -113,6 +113,10 @@ Total Length: 330 | Segment: SEG-ROAD07-01 | Location: MAIN
 
 Total Length: 150 | Segment: SEG-BRIDGE-01 | Location: NORTH
 
+### ROAD07-EMPTY — HIGHWAY 07 - NO SERVICE REQUESTS
+
+Same markers and length as ROAD07 (5 markers, total length 330, location MAIN). This variant loads with an empty Existing Service Requests table, making it useful for testing the overlap toggle and empty state.
+
 ---
 
 ## Meter Validation Options
@@ -196,7 +200,8 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | Repair Site | (empty) |
 | Date Time In | 03/21/2023 2:00 PM (Date object via `aw-date-time-picker`) |
 | Date Time Due | 03/24/2023 2:00 PM (Date object via `aw-date-time-picker`) |
-| Time Format | 12h (toggle between 12h / 24h via `aw-toggle` in Scheduling header) |
+| Time Format | 12h (toggle between 12h / 24h via `aw-select-menu` in floating Settings panel) |
+| Estimated Appointment Hours | (empty) — shown for Repair and PM (hidden for Part Rebuild) |
 | Vendor | (empty) |
 | Technician | (LOGGED in TECH ID) Tech Name (read-only) |
 | Contact Name | Jane Doe |
@@ -206,13 +211,27 @@ Shown when Job Type = PM (for fleet assets) or PM + Linear asset. Data changes p
 | Financial Project Code | (TECH001) John Smith |
 | Account | (empty) |
 | Warranty Work | No |
+| Comments | (empty) — Financial section, max 2000 characters |
 | Notes | (empty) |
+| **New Service Request fields (Repair only)** | |
+| Standard Jobs | (empty) |
+| Symptom | (empty) |
+| Fail / Cause Code | (empty) |
+| WAC | (empty) |
+| SR Comments | (empty) — max 2000 characters |
+| Correction Performed | (empty) — only visible when linear asset is selected, max 2000 characters |
+| **Linear Asset fields** | |
+| Location | (auto-filled from selected linear asset) |
+| Equipment ID | (empty) |
+| From Marker / To Marker | (set from linear asset marker data) |
+| From Offset / To Offset | 0.0000 |
+| Overlap Service Requests | false (toggle, linear assets only) |
 
 ---
 
 ## Lookup Field Descriptions
 
-All 13 lookup fields (fields with a magnifying glass search button) resolve typed values against mock data on blur. The input is uppercased, and a description appears below the field. If no match is found, "NOT DEFINED" is shown. Clearing the field hides the description.
+All 19 lookup fields (fields with a magnifying glass search button) resolve typed values against mock data on blur. The input is uppercased, and a description appears below the field. If no match is found, "NOT DEFINED" is shown. Clearing the field hides the description.
 
 ### Asset
 
@@ -375,6 +394,72 @@ Used in both the Scheduling section (all forms) and the Linear Asset section. Sa
 
 ---
 
+## New Service Request Section (Repair Job Type Only)
+
+Visible when Job Type = Repair. Contains lookup fields for defining a new service request, plus text areas for comments and (for linear assets) correction performed.
+
+| Field | Type | Visibility | Max Length |
+|---|---|---|---|
+| Standard Jobs | Lookup (input + search icon) | Always (when section visible) | — |
+| Symptom | Lookup (input + search icon) | Always (when section visible) | — |
+| Fail / Cause Code | Lookup (input + search icon) | Always (when section visible) | — |
+| WAC | Lookup (input + search icon) | Always (when section visible) | — |
+| Comments | Textarea | Always (when section visible) | 2000 |
+| Correction Performed | Textarea | Only when a linear asset is selected | 2000 |
+
+---
+
+## Estimated Appointment Hours
+
+Visible for Repair and PM job types (hidden for Part Rebuild). Located in the Scheduling section below the Location/Vendor row.
+
+| Field | Type | Placeholder | Input Mode |
+|---|---|---|---|
+| Estimated Appointment Hours | Text input | 0.00 | Decimal (digits + single decimal point, max 2 decimal places) |
+
+---
+
+## Comments Field (Financial Section)
+
+Located in the Financial section alongside Notes. Both are textareas with a 2000-character limit and character count display.
+
+| Field | Type | Max Length | Visibility |
+|---|---|---|---|
+| Notes | Textarea | 2000 | All job types |
+| Comments | Textarea | 2000 | All job types |
+
+---
+
+## Overlap Service Requests Toggle (Linear Assets Only)
+
+Visible inside the Existing Service Requests expansion panel when a linear asset is selected. The toggle label reads "Retrieve service requests / defects that overlap with work order position".
+
+| Toggle State | Behavior |
+|---|---|
+| Off (default) | Shows only service requests directly assigned to the asset |
+| On | Loads 3 mock overlapping service requests (SR-LIN-001, SR-LIN-002, SR-LIN-003) |
+
+### Overlapping Service Request Data (3 rows)
+
+| Task ID | Description | Has Comment? | Symptom ID | Symptom Desc | Entered Date | Time | Entered By | Priority |
+|---|---|---|---|---|---|---|---|---|
+| SR-LIN-001 | Pothole repair - marker 2 to 3 | Yes | SYM-RD | Road surface damage | 02/10/2026 | 8:30 AM | John Smith | 2 - Urgent |
+| SR-LIN-002 | Guard rail replacement | No | SYM-GR | Damaged guard rail | 02/15/2026 | 10:00 AM | Jane Doe | 3 - High |
+| SR-LIN-003 | Line marking refresh | No | SYM-LM | Faded lane markings | 03/01/2026 | 2:15 PM | Mike Brown | 4 - Normal |
+
+---
+
+## Service Request Detail Dialog
+
+Clicking "View Service Request" link in the Existing Service Requests table opens a dialog showing the full service request details. The dialog has:
+
+- **Select** button — assigns the service request to the work order (checks the Assign checkbox)
+- **Cancel** button — closes without action
+- **Manage Service Request** — shows an "Unsaved Changes" alert dialog, then alerts navigation placeholder
+- **Create New Service Request** — shows an "Unsaved Changes" alert dialog, then alerts navigation placeholder
+
+---
+
 ## Quick Scenarios
 
 | I want to see... | How |
@@ -387,7 +472,7 @@ Used in both the Scheduling section (all forms) and the Linear Asset section. Sa
 | Empty form (no asset data) | Clear the asset field — messages, service requests, and services/inspections all clear |
 | Task comment drawer | Click the comment icon on BRK-001 or TRN-003 in the Existing Service Requests table |
 | Task without comment | OIL-002 and ENG-004 have no comment icon |
-| Existing Service Requests empty + retrieve overlapping | Select Repair + linear asset (e.g., ROAD07-EMPTY) — table is empty, click archive icon to load 3 overlapping SRs |
+| Existing Service Requests empty + retrieve overlapping | Select Repair + linear asset (e.g., ROAD07-EMPTY) — table is empty, turn on overlap toggle to load 3 overlapping SRs |
 | Work Position map (fleet) | Select Repair or PM with a fleet asset, expand the "Work Position" panel |
 | Linear asset slider (ROAD07, 5 markers) | Select Repair or PM, click Asset search icon, select ROAD07 |
 | Linear asset slider (Bridge, 4 markers) | Select Repair or PM, click Asset search icon, select UX-BRIDGE-LINEAR |
@@ -411,3 +496,11 @@ Used in both the Scheduling section (all forms) and the Linear Asset section. Sa
 | Lookup description — all Repair fields | Select Repair, fill Repair Reason (`RR-001`), Work Class (`WC-002`), Service Status (`SS-001`), Repair Site (`RS-003`) → descriptions appear for each |
 | Lookup description — PM Linear fields | Select PM + linear asset (ROAD07), type `PM-001` in PM Service → "Oil Change Service" appears |
 | New Service Request section | Select Repair job type — "New Service Request" section appears with Standard Jobs, Symptom, Fail/Cause Code, WAC lookups and Comments |
+| Correction Performed field (linear only) | Select Repair + linear asset (e.g., ROAD07) — Correction Performed textarea appears next to SR Comments in the New Service Request section |
+| Estimated Appointment Hours | Select Repair or PM — field appears in Scheduling section below Location/Vendor row. Hidden for Part Rebuild |
+| Comments field (Financial) | Visible for all job types — appears next to Notes in the Financial section |
+| Overlap toggle (linear) | Select Repair + linear asset (e.g., ROAD07) — toggle appears in Existing Service Requests panel. Turn on to load 3 overlapping SRs |
+| Overlap toggle with empty table | Select Repair + linear asset ROAD07-EMPTY — table is empty, toggle visible. Turn on to load 3 overlapping SRs |
+| Service Request detail dialog | Click "View Service Request" link on any row in the Existing Service Requests table |
+| Service Request dialog — Select action | In the SR dialog, click "Select" — the Assign checkbox for that row gets checked |
+| Service Request dialog — Navigate away alert | In the SR dialog, click "Manage Service Request" or "Create New Service Request" — shows unsaved changes alert |

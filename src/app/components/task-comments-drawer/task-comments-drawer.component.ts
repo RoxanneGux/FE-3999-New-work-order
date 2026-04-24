@@ -24,6 +24,7 @@ import {
       #taskCommentsDrawer
       [openFromRight]="true"
       [drawerInformation]="drawerInfo()"
+      [attr.aria-label]="'Task comments drawer'"
       (sideDrawerClosed)="closeDrawer()">
       <div class="p-3">
         <aw-expansion-panel
