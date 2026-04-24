@@ -35,6 +35,8 @@ import { Marker } from './linear-asset.interface';
 import { LinearAssetSliderComponent } from '../../components/linear-asset-slider/linear-asset-slider.component';
 import { DialogService } from '../../services/dialog.service';
 import { AssetSearchDialogComponent, AssetSearchDialogResult } from '../../components/dialogs/asset-search-dialog/asset-search-dialog.component';
+import { TableLinkCellComponent } from '../../components/table-link-cell/table-link-cell.component';
+import { ServiceRequestDialogComponent } from '../../components/dialogs/service-request-dialog/service-request-dialog.component';
 
 @Component({
   selector: 'app-new-work-order',
@@ -367,7 +369,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   });
 
   serviceRequestColumns: TableCellInput[] = [
-    { type: TableCellTypes.Checkbox, key: 'selected', label: '' },
+    { type: TableCellTypes.Checkbox, key: 'selected', label: 'Assign' },
     {
       sort: true, align: 'left', type: TableCellTypes.Custom, key: 'taskId', label: 'Task',
       combineFields: ['taskId', 'taskDescription'],
@@ -423,17 +425,23 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
       })
     },
     {
-      type: TableCellTypes.IconButton, key: 'searchAction', label: ' ', align: 'center',
-      buttonType: 'primary', icon: 'search',
-      action: (data?: any) => console.log('Search row:', data)
+      sort: false, align: 'center', type: TableCellTypes.Custom, key: 'viewAction', label: ' ',
+      combineFields: ['taskId'],
+      combineTemplate: (values: any[]) => ({
+        component: TableLinkCellComponent,
+        componentData: {
+          label: 'View Service Request',
+          callback: () => this.onViewServiceRequest(values[0])
+        }
+      })
     }
   ];
 
   serviceRequestData = signal([
-    { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', comment: { hasComment: true, text: 'Front brake pads worn below minimum thickness. Recommend immediate replacement with OEM parts.' }, symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' },
-    { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', comment: { hasComment: false, text: '' }, symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal', searchAction: '' },
-    { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', comment: { hasComment: true, text: 'Transmission fluid dark and burnt. Possible internal wear. Monitor after flush for shifting issues.' }, symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
-    { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' }
+    { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', comment: { hasComment: true, text: 'Front brake pads worn below minimum thickness. Recommend immediate replacement with OEM parts.' }, symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High' },
+    { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', comment: { hasComment: false, text: '' }, symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal' },
+    { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', comment: { hasComment: true, text: 'Transmission fluid dark and burnt. Possible internal wear. Monitor after flush for shifting issues.' }, symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent' },
+    { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High' }
   ]);
 
   // Services and Inspections Due table (PM only)
@@ -872,10 +880,10 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
   /** Load per-asset service requests and services/inspections data. */
   private loadAssetRelatedData(assetId: string): void {
     const defaultServiceRequests = [
-      { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', comment: { hasComment: true, text: 'Front brake pads worn below minimum thickness. Recommend immediate replacement with OEM parts.' }, symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' },
-      { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', comment: { hasComment: false, text: '' }, symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal', searchAction: '' },
-      { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', comment: { hasComment: true, text: 'Transmission fluid dark and burnt. Possible internal wear. Monitor after flush for shifting issues.' }, symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
-      { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High', searchAction: '' }
+      { selected: false, taskId: 'BRK-001', taskDescription: 'Replace brake pads', comment: { hasComment: true, text: 'Front brake pads worn below minimum thickness. Recommend immediate replacement with OEM parts.' }, symptomId: 'SYM-BRK', symptomDescription: 'Squealing noise when braking', enteredDate: '03/15/2023', enteredTime: '10:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High' },
+      { selected: false, taskId: 'OIL-002', taskDescription: 'Oil change and filter', comment: { hasComment: false, text: '' }, symptomId: 'SYM-MNT', symptomDescription: 'Scheduled maintenance', enteredDate: '03/18/2023', enteredTime: '2:15 PM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '4', priorityDescription: 'Normal' },
+      { selected: false, taskId: 'TRN-003', taskDescription: 'Transmission fluid flush', comment: { hasComment: true, text: 'Transmission fluid dark and burnt. Possible internal wear. Monitor after flush for shifting issues.' }, symptomId: 'SYM-TRN', symptomDescription: 'Hard shifting', enteredDate: '03/19/2023', enteredTime: '9:00 AM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '2', priorityDescription: 'Urgent' },
+      { selected: false, taskId: 'ENG-004', taskDescription: 'Diagnose engine misfire', comment: { hasComment: false, text: '' }, symptomId: 'SYM-ENG', symptomDescription: 'Check engine light', enteredDate: '03/20/2023', enteredTime: '11:45 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '3', priorityDescription: 'High' }
     ];
 
     const defaultServicesInspections = [
@@ -929,10 +937,29 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
 
     // Mock overlapping SRs that would come from the API
     this.serviceRequestData.set([
-      { selected: false, taskId: 'SR-LIN-001', taskDescription: 'Pothole repair - marker 2 to 3', comment: { hasComment: true, text: 'Large pothole near marker ROAD07-02. Reported by maintenance crew.' }, symptomId: 'SYM-RD', symptomDescription: 'Road surface damage', enteredDate: '02/10/2026', enteredTime: '8:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '2', priorityDescription: 'Urgent', searchAction: '' },
-      { selected: false, taskId: 'SR-LIN-002', taskDescription: 'Guard rail replacement', comment: { hasComment: false, text: '' }, symptomId: 'SYM-GR', symptomDescription: 'Damaged guard rail', enteredDate: '02/15/2026', enteredTime: '10:00 AM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '3', priorityDescription: 'High', searchAction: '' },
-      { selected: false, taskId: 'SR-LIN-003', taskDescription: 'Line marking refresh', comment: { hasComment: false, text: '' }, symptomId: 'SYM-LM', symptomDescription: 'Faded lane markings', enteredDate: '03/01/2026', enteredTime: '2:15 PM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '4', priorityDescription: 'Normal', searchAction: '' }
+      { selected: false, taskId: 'SR-LIN-001', taskDescription: 'Pothole repair - marker 2 to 3', comment: { hasComment: true, text: 'Large pothole near marker ROAD07-02. Reported by maintenance crew.' }, symptomId: 'SYM-RD', symptomDescription: 'Road surface damage', enteredDate: '02/10/2026', enteredTime: '8:30 AM', enteredByName: 'John Smith', enteredById: 'TECH001', priorityId: '2', priorityDescription: 'Urgent' },
+      { selected: false, taskId: 'SR-LIN-002', taskDescription: 'Guard rail replacement', comment: { hasComment: false, text: '' }, symptomId: 'SYM-GR', symptomDescription: 'Damaged guard rail', enteredDate: '02/15/2026', enteredTime: '10:00 AM', enteredByName: 'Jane Doe', enteredById: 'TECH002', priorityId: '3', priorityDescription: 'High' },
+      { selected: false, taskId: 'SR-LIN-003', taskDescription: 'Line marking refresh', comment: { hasComment: false, text: '' }, symptomId: 'SYM-LM', symptomDescription: 'Faded lane markings', enteredDate: '03/01/2026', enteredTime: '2:15 PM', enteredByName: 'Mike Brown', enteredById: 'TECH003', priorityId: '4', priorityDescription: 'Normal' }
     ]);
+  }
+
+  /** Open the Service Request detail dialog for a given task ID. */
+  onViewServiceRequest(taskId: string): void {
+    // Find the service request data for this task
+    const srData = this.serviceRequestData().find(sr => sr.taskId === taskId);
+    if (!srData) return;
+
+    this._dialogService.open(ServiceRequestDialogComponent, {
+      taskId: srData.taskId,
+      taskDescription: srData.taskDescription,
+      symptomId: srData.symptomId,
+      symptomDescription: srData.symptomDescription,
+      enteredDate: srData.enteredDate,
+      enteredTime: srData.enteredTime,
+      enteredByName: srData.enteredByName,
+      priorityId: srData.priorityId,
+      priorityDescription: srData.priorityDescription,
+    });
   }
 
   openCommentDrawer(taskId: string, taskDescription: string, comment: string): void {
