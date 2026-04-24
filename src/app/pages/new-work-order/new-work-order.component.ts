@@ -357,6 +357,7 @@ Unit is Overdue 10100 life MILES on meter 1 for service QA-PM-A
     srFailCauseCode: new FormControl(''),
     srWac: new FormControl(''),
     srComments: new FormControl(''),
+    srCorrectionPerformed: new FormControl(''),
     estimatedAppointmentHours: new FormControl(''),
     comments: new FormControl('')
   });

@@ -693,7 +693,15 @@
               <aw-form-message type="info" [maximumCharacters]="2000" [currentCharacterCount]="woForm.get('srComments')?.value ?? null"></aw-form-message>
               <aw-form-field><textarea AwInput formControlName="srComments" rows="6" maxlength="2000" aria-label="Service Request Comments"></textarea></aw-form-field>
             </div>
-            <div class="form-field"></div>
+            @if (isLinearAsset()) {
+              <div class="form-field">
+                <aw-form-field-label>Correction Performed</aw-form-field-label>
+                <aw-form-message type="info" [maximumCharacters]="2000" [currentCharacterCount]="woForm.get('srCorrectionPerformed')?.value ?? null"></aw-form-message>
+                <aw-form-field><textarea AwInput formControlName="srCorrectionPerformed" rows="6" maxlength="2000" aria-label="Correction Performed"></textarea></aw-form-field>
+              </div>
+            } @else {
+              <div class="form-field"></div>
+            }
           </div>
         </div>
       }
